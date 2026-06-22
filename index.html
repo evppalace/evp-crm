@@ -239,6 +239,17 @@ function initFirebase(){
 // ── CLOUD SAVE ────────────────────────────────────────────────────────────────
 // ── CHAT ────────────────────────────────────────────────────────────────────
 DATA.chat=DATA.chat||[];
+var CHAT_COLORS=['#C8922A','#5A9E6F','#5880C8','#D07030','#9060C8','#30A090','#C84030','#E8B84B'];
+function chatColor(uid2){var h=0;for(var i=0;i<(uid2||'').length;i++)h=(h*31+uid2.charCodeAt(i))&0xffff;return CHAT_COLORS[h%CHAT_COLORS.length];}
+function chatInitials(name){var p=(name||'?').split(' ');return (p[0][0]+(p[1]?p[1][0]:'')).toUpperCase();}
+function isSameDay(a,b){var da=new Date(a),db=new Date(b);return da.getFullYear()===db.getFullYear()&&da.getMonth()===db.getMonth()&&da.getDate()===db.getDate();}
+function chatDayLabel(ts){
+  var d=new Date(ts),now=new Date();
+  if(isSameDay(ts,now))return'Today';
+  var y=new Date(now);y.setDate(y.getDate()-1);
+  if(isSameDay(ts,y))return'Yesterday';
+  return d.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+}
 function initChatSync(){
   if(!DB)return;
   DB.ref('chat').limitToLast(200).on('value',function(snap){
@@ -252,46 +263,67 @@ function sendChatMsg(){
   if(!inp)return;
   var msg=(inp.value||'').trim();
   if(!msg)return;
-  if(!DB){alert('Not connected');return;}
-  var u=DATA.user||{name:'Unknown',id:'?'};
-  var ref=DB.ref('chat').push();
-  ref.set({text:msg,user:u.name,uid:u.id,ts:Date.now()});
-  inp.value='';
-  inp.focus();
+  if(!DB){alert('Not connected to cloud');return;}
+  var u=AUTH||{display:'Unknown',key:'?'};
+  inp.value='';inp.focus();
+  DB.ref('chat').push({text:msg,user:u.display||u.key,uid:u.key,ts:Date.now()}).catch(function(){alert('Failed to send. Check connection.');});
 }
 function renderChatMessages(){
   var cw=document.getElementById('chat-msgs');
   if(!cw)return;
-  var u=DATA.user||{};
+  var u=AUTH||{};
+  if(!DATA.chat.length){
+    cw.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;min-height:180px;gap:10px"><div style="font-size:36px;opacity:.3">💬</div><div style="color:var(--mu);font-size:13px">No messages yet — say hello!</div></div>';
+    return;
+  }
   var html='';
-  DATA.chat.forEach(function(m){
-    var mine=m.uid===u.id;
-    var t=m.ts?new Date(m.ts).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true})+' '+new Date(m.ts).toLocaleDateString('en-IN',{day:'2-digit',month:'short'}):'';
-    html+='<div style="display:flex;flex-direction:column;align-items:'+(mine?'flex-end':'flex-start')+';margin-bottom:10px">';
-    if(!mine)html+='<div style="font-size:10px;font-weight:700;color:var(--gold);margin-bottom:3px;padding-left:4px">'+xe(m.user)+'</div>';
-    html+='<div style="max-width:80%;background:'+(mine?'var(--gold)':'var(--c2)')+';color:'+(mine?'#1a0e06':'var(--cr)')+';padding:9px 13px;border-radius:'+(mine?'14px 4px 14px 14px':'4px 14px 14px 14px')+';font-size:13px;line-height:1.4">'+xe(m.text)+'</div>';
-    html+='<div style="font-size:9px;color:var(--mu);margin-top:3px;padding:'+(mine?'0 4px 0 0':'0 0 0 4px')+'">'+t+'</div>';
-    html+='</div>';
+  var lastDay=null,lastUid=null;
+  DATA.chat.forEach(function(m,i){
+    var mine=m.uid===u.key;
+    var clr=chatColor(m.uid);
+    var day=m.ts?chatDayLabel(m.ts):null;
+    var time=m.ts?new Date(m.ts).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true}):'';
+    if(day&&day!==lastDay){
+      html+='<div style="display:flex;align-items:center;gap:8px;margin:12px 0 8px"><div style="flex:1;height:1px;background:var(--bdr)"></div><div style="font-size:10px;font-weight:700;color:var(--mu);white-space:nowrap;padding:2px 10px;background:var(--card);border:1px solid var(--bdr);border-radius:20px">'+day+'</div><div style="flex:1;height:1px;background:var(--bdr)"></div></div>';
+      lastDay=day;lastUid=null;
+    }
+    var showAvatar=!mine&&(m.uid!==lastUid);
+    var grouped=m.uid===lastUid;
+    lastUid=m.uid;
+    html+='<div style="display:flex;align-items:flex-end;gap:8px;margin-bottom:'+(grouped?'3px':'10px')+';flex-direction:'+(mine?'row-reverse':'row')+'">';
+    if(!mine){
+      if(showAvatar)html+='<div style="width:30px;height:30px;border-radius:50%;background:'+clr+'22;border:1.5px solid '+clr+';display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:'+clr+';flex-shrink:0">'+chatInitials(m.user)+'</div>';
+      else html+='<div style="width:30px;flex-shrink:0"></div>';
+    }
+    html+='<div style="display:flex;flex-direction:column;align-items:'+(mine?'flex-end':'flex-start');html+=';max-width:75%">';
+    if(showAvatar&&!mine)html+='<div style="font-size:10px;font-weight:700;color:'+clr+';margin-bottom:3px;padding-left:2px">'+xe(m.user)+'</div>';
+    html+='<div style="background:'+(mine?'var(--gold)':'var(--c2)')+';color:'+(mine?'#1a0e06':'var(--cr)')+';padding:9px 13px;border-radius:'+(mine?(grouped?'14px 4px 4px 14px':'14px 4px 14px 14px'):(grouped?'4px 14px 14px 4px':'4px 14px 14px 14px'))+';font-size:13px;line-height:1.5;word-break:break-word;border:1px solid '+(mine?'rgba(200,146,42,.4)':'var(--bdr)')+'">'+xe(m.text)+'</div>';
+    if(time)html+='<div style="font-size:9px;color:var(--mu);margin-top:3px;padding:'+(mine?'0 3px 0 0':'0 0 0 3px')+'">'+time+'</div>';
+    html+='</div></div>';
   });
-  cw.innerHTML=html||'<div style="text-align:center;color:var(--mu);padding:30px 0;font-size:13px">No messages yet. Say hello!</div>';
-  cw.scrollTop=cw.scrollHeight;
+  var prev=cw.scrollTop,atBottom=(cw.scrollHeight-cw.clientHeight-cw.scrollTop)<60;
+  cw.innerHTML=html;
+  if(atBottom||cw.scrollTop===0)cw.scrollTop=cw.scrollHeight;
 }
 function renderChat(){
   if(!DATA.chatInited){DATA.chatInited=true;initChatSync();}
-  var h='<div style="display:flex;flex-direction:column;height:calc(100vh - 130px)">';
-  h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">';
-  h+='<h2 style="font-size:18px">&#128172; Team Chat</h2>';
-  h+='<div style="font-size:11px;color:var(--mu)">Internal &bull; EVP Team</div>';
+  var u=AUTH||{};
+  var h='<div style="display:flex;flex-direction:column;height:calc(100dvh - 134px)">';
+  // Header
+  h+='<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;padding:10px 12px;background:var(--card);border:1px solid var(--bdr);border-radius:10px">';
+  h+='<div style="width:36px;height:36px;border-radius:50%;background:var(--gF);border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:16px">💬</div>';
+  h+='<div style="flex:1"><div style="font-size:14px;font-weight:800">EVP Team Chat</div><div style="font-size:10px;color:var(--gr)">● Live &bull; Internal Channel</div></div>';
+  h+='<div style="font-size:11px;color:var(--mu);background:var(--c2);border:1px solid var(--bdr);border-radius:20px;padding:3px 10px">'+xe(u.display||u.key||'?')+'</div>';
   h+='</div>';
-  h+='<div id="chat-msgs" style="flex:1;overflow-y:auto;background:var(--c2);border:1px solid var(--bdr);border-radius:12px;padding:12px;margin-bottom:10px;min-height:200px">';
-  // Messages will be injected by renderChatMessages
-  h+='<div style="text-align:center;color:var(--mu);padding:30px 0;font-size:13px">Loading messages...</div>';
+  // Messages area
+  h+='<div id="chat-msgs" style="flex:1;overflow-y:auto;padding:4px 0 8px;scrollbar-width:thin;scrollbar-color:var(--bdr) transparent">';
+  h+='<div style="display:flex;align-items:center;justify-content:center;height:100px;color:var(--mu);font-size:12px">Loading…</div>';
   h+='</div>';
-  h+='<div style="display:flex;gap:8px;padding-bottom:4px">';
-  h+='<input id="chat-inp" class="inp" placeholder="Type a message..." style="flex:1;font-size:13px" onkeydown="if(event.key===\'Enter\'&&!event.shiftKey){event.preventDefault();sendChatMsg();}">';
-  h+='<button class="btn bp" onclick="sendChatMsg()" style="flex-shrink:0;padding:0 16px;font-size:18px">&#9658;</button>';
-  h+='</div>';
-  h+='</div>';
+  // Input
+  h+='<div style="display:flex;gap:8px;padding-top:8px;border-top:1px solid var(--bdr);margin-top:6px">';
+  h+='<input id="chat-inp" class="inp" placeholder="Message the team…" style="flex:1;font-size:14px;border-radius:22px;padding:10px 16px" onkeydown="if(event.key===\'Enter\'&&!event.shiftKey){event.preventDefault();sendChatMsg();}" autocomplete="off">';
+  h+='<button class="btn bp" onclick="sendChatMsg()" style="flex-shrink:0;width:44px;height:44px;padding:0;border-radius:22px;font-size:20px" title="Send">&#10148;</button>';
+  h+='</div></div>';
   return h;
 }
 // ── END CHAT ──────────────────────────────────────────────────────────────────
@@ -592,6 +624,15 @@ function openLeadEnquiryPDF(l){
     d.innerHTML='<div style="position:fixed;top:0;left:0;right:0;bottom:0;background:#faf5ee;z-index:99999;overflow:auto"><button onclick="this.parentNode.remove()" style="position:fixed;top:12px;right:12px;background:#c8922a;color:#fff;border:none;border-radius:20px;padding:8px 16px;font-size:13px;font-weight:700;z-index:100000">\u00d7 Close</button>'+html+'</div>';
     document.body.appendChild(d);
   }
+}
+function sendEnquiryWA(l){
+  var ph=(l.phone||'').split(';')[0].replace(/[^0-9]/g,'');
+  if(!ph){alert('No phone number for this lead.');return;}
+  var intl=ph.length>10&&ph.indexOf('91')===0?ph:'91'+ph;
+  var quoteUrl=buildQuoteURL(l,'lead');
+  var sd=l.startDate?new Date(l.startDate+'T00:00:00').toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'}):'';
+  var msg='*EVP Rajeshwari Marriage Palace*\n_Managed by Alangaram Events_\n\nDear *'+l.name+'*,\n\nThank you for your enquiry! ✨\n\nWe are pleased to share your personalised venue proposal:\n\n📄 *View Enquiry Proposal:*\n'+quoteUrl+'\n'+(sd?'\n📅 Event Date: '+sd:'')+(l.fnType?'\n🎉 Function: '+l.fnType:'')+'\n\nTo confirm & block your date, a 50% advance is required.\nFor queries, call or WhatsApp us at *+91 80811 11114*\n\n_— Alangaram Events | EVP Rajeshwari Marriage Palace_';
+  window.open('https://wa.me/'+intl+'?text='+encodeURIComponent(msg),'_blank');
 }
 // ── END LEAD ENQUIRY PDF ──────────────────────────────────────────────────────
 // ── INTERNAL SUMMARY PDF ──────────────────────────────────────────────────────
@@ -968,7 +1009,7 @@ function renderLeads(){
     h+='<div style="display:flex;gap:7px;flex-wrap:wrap">';
     h+='<button class="btn bp sm" data-action="pdf-lead" data-id="'+l.id+'">&#128196; Enquiry PDF</button>';
     var _lph2=(l.phone||'').split(';')[0].replace(/[^0-9+]/g,'');
-    if(_lph2)h+='<a class="btn bsu sm" href="tel:'+xe(_lph2)+'" style="text-decoration:none">&#128222;</a>';
+    if(_lph2){h+='<button class="btn bwa sm" data-action="wa-enq" data-id="'+l.id+'">&#128172; Send to Client</button>';h+='<a class="btn bsu sm" href="tel:'+xe(_lph2)+'" style="text-decoration:none">&#128222;</a>';}
     h+='<select class="sel" style="flex:1;font-size:11px;padding:5px 8px" data-action="lead-status" data-id="'+l.id+'">';
     STATS.forEach(function(s){h+='<option value="'+s.k+'"'+(s.k===l.status?' selected':'')+'>'+s.l+'</option>';});
     h+='</select>';
@@ -1944,6 +1985,7 @@ document.addEventListener('click',function(e){
   if(act==='save-bkg-decor'){saveBkgDecor();return;}
   if(act==='guest-link'){var bg=fbkg(id);if(bg){var gu=buildQuoteURL(bg,'booking');var gUrl='https://yokesh707.github.io/evp-crm/guest.html?'+gu.split('?')[1];window.open(gUrl,'_blank');}return;}
   if(act==='pdf-lead'){var pl=flead(id);if(pl)openLeadEnquiryPDF(pl);return;}
+  if(act==='wa-enq'){var wel=flead(id);if(wel)sendEnquiryWA(wel);return;}
     if(act==='pdf-bkg'){var pb=fbkg(id);if(pb)sendQuoteWA(pb,'booking');return;}
 
   if(act==='lead-status'){var sel=target;if(sel.tagName!=='SELECT')return;var lx=flead(id);if(lx)cloudSaveLead(Object.assign({},lx,{status:sel.value}));return;}

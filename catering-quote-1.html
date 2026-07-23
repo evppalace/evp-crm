@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1B5E20">
+<title>Kalyana Sapadu - Your Catering Quote</title>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+<style>
+:root {
+  --primary: #1B5E20;
+  --secondary: #4CAF50;
+  --accent: #8B4513;
+  --accent-light: #D4AF37;
+  --bg: #F5F5F0;
+  --card: #FFFFFF;
+  --text: #2C2C2C;
+  --subtext: #666666;
+  --border: #E0D5C8;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  padding-bottom: 120px;
+}
+
+.header {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  padding: 20px 16px;
+  text-align: center;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.header-icon { 
+  width: 40px; 
+  height: 40px; 
+  margin: 0 auto 12px; 
+  fill: white;
+}
+.header-title { font-size: 18px; font-weight: 800; letter-spacing: 0.5px; }
+.header-subtitle { font-size: 11px; opacity: 0.9; margin-top: 4px; }
+
+.container { max-width: 720px; margin: 0 auto; padding: 16px; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.section-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--secondary);
+}
+
+.quote-id {
+  background: #F0F0F0;
+  padding: 8px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-family: monospace;
+  color: var(--subtext);
+  margin-bottom: 12px;
+  word-break: break-all;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #F0F0F0;
+  font-size: 12px;
+}
+
+.detail-row:last-child { border-bottom: none; }
+
+.detail-label { font-weight: 700; color: var(--primary); }
+.detail-value { color: var(--text); text-align: right; }
+
+.cost-breakdown {
+  background: linear-gradient(135deg, #F0F0F0 0%, #F8F8F8 100%);
+  border-left: 4px solid var(--secondary);
+  padding: 12px;
+  border-radius: 4px;
+  margin-top: 12px;
+}
+
+.breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 11px;
+}
+
+.breakdown-label { color: var(--subtext); }
+.breakdown-value { font-weight: 700; color: var(--text); }
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-top: 2px solid var(--secondary);
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.total-label { color: var(--primary); }
+.total-value { color: var(--secondary); }
+
+.menu-section { margin-top: 12px; }
+.menu-title { font-size: 11px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+.menu-item {
+  background: #F9F9F9;
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 6px;
+  font-size: 11px;
+  border-left: 3px solid var(--secondary);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.status-new { background: #E3F2FD; color: #1976D2; }
+.status-synced { background: #E8F5E9; color: #2E7D32; }
+.status-confirmed { background: #F3E5F5; color: #6A1B9A; }
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  flex: 1;
+  min-width: 120px;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover { background: #145A0E; }
+
+.btn-secondary {
+  background: var(--secondary);
+  color: white;
+}
+
+.btn-secondary:hover { background: #388E3C; }
+
+.btn-outline {
+  background: white;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+}
+
+.btn-outline:hover { background: #F5F5F0; }
+
+.info-box {
+  background: #E8F5E9;
+  border: 1px solid #4CAF50;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 12px;
+  font-size: 11px;
+  color: #1B5E20;
+  line-height: 1.6;
+}
+
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--subtext);
+}
+
+.spinner {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error-box {
+  background: #FFEBEE;
+  border: 1px solid #EF5350;
+  border-radius: 6px;
+  padding: 20px;
+  text-align: center;
+  color: #C62828;
+  margin-top: 40px;
+}
+
+.divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-top: 1px solid var(--border);
+  padding: 12px 16px;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+  max-width: 720px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.footer-content {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.footer-content .btn { margin: 0; }
+</style>
+
+</head>
+<body>
+
+<div class="header">
+  <svg class="header-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <rect x="15" y="20" width="15" height="60" fill="white" rx="2"/>
+    <rect x="42" y="20" width="15" height="60" fill="white" rx="2"/>
+    <rect x="69" y="20" width="15" height="60" fill="white" rx="2"/>
+    <circle cx="22" cy="10" r="6" fill="white"/>
+    <circle cx="49" cy="10" r="6" fill="white"/>
+    <circle cx="76" cy="10" r="6" fill="white"/>
+  </svg>
+  <div class="header-title">Kalyana Sapadu</div>
+  <div class="header-subtitle">Premium Vegetarian Catering</div>
+</div>
+
+<div class="container">
+
+  <!-- Loading State -->
+  <div id="loadingState" class="loading">
+    <div class="spinner"></div>
+    <div>Loading your quote...</div>
+  </div>
+
+  <!-- Quote Content (Hidden initially) -->
+  <div id="quoteContent" style="display: none;">
+
+    <!-- Status Badge -->
+    <div id="statusBadge" class="status-badge status-new">New Enquiry</div>
+
+    <!-- Quick Info Box -->
+    <div class="info-box">
+      📧 This is your personalized catering quote. Share this link to discuss menu options with our team.
+    </div>
+
+    <!-- Quote Details Card -->
+    <div class="card">
+      <div class="section-title">📋 Your Event Details</div>
+      
+      <div class="quote-id">Quote ID: <span id="quoteId">-</span></div>
+
+      <div class="detail-row">
+        <span class="detail-label">👤 Name</span>
+        <span class="detail-value" id="clientName">-</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">📱 Phone</span>
+        <span class="detail-value" id="clientPhone">-</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">🎉 Event Type</span>
+        <span class="detail-value" id="eventType">-</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">📅 Date</span>
+        <span class="detail-value" id="eventDate">-</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">👥 Guests</span>
+        <span class="detail-value" id="guestCount">-</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">📍 Venue</span>
+        <span class="detail-value" id="venue">-</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Cost Breakdown -->
+      <div class="cost-breakdown">
+        <div class="breakdown-row">
+          <span class="breakdown-label">Estimated Cost per Guest:</span>
+          <span class="breakdown-value" id="costPerGuest">₹0</span>
+        </div>
+
+        <div class="breakdown-row">
+          <span class="breakdown-label">Number of Guests:</span>
+          <span class="breakdown-value" id="totalGuests">0</span>
+        </div>
+
+        <div class="total-row">
+          <span class="total-label">Estimated Total Cost</span>
+          <span class="total-value" id="totalCost">₹0</span>
+        </div>
+      </div>
+
+      <div style="font-size: 9px; color: var(--subtext); margin-top: 8px; line-height: 1.5;">
+        ℹ️ This is an estimated cost. Final pricing will depend on your menu selection & special requests.
+      </div>
+    </div>
+
+    <!-- Menu Selection Section -->
+    <div class="card">
+      <div class="section-title">🍽️ Next Steps</div>
+      
+      <div style="font-size: 12px; line-height: 1.6; color: var(--text); margin-bottom: 12px;">
+        <p style="margin-bottom: 8px;">
+          💚 <strong>Browse our catering menu</strong> and select your preferred packages.
+        </p>
+        <p>
+          📞 <strong>Contact us</strong> to finalize your order and discuss customizations.
+        </p>
+      </div>
+
+      <div class="menu-item">
+        ✓ Browse 15+ curated menu packages
+      </div>
+      <div class="menu-item">
+        ✓ Customize vegetarian options
+      </div>
+      <div class="menu-item">
+        ✓ Confirm final pricing
+      </div>
+    </div>
+
+    <!-- Contact Card -->
+    <div class="card">
+      <div class="section-title">📞 Contact Us</div>
+      
+      <div class="detail-row">
+        <span class="detail-label">💬 WhatsApp</span>
+        <span class="detail-value">+91 9696962666</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">📧 Email</span>
+        <span class="detail-value">catering@kalyanasapadu.com</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">📍 Location</span>
+        <span class="detail-value">Chennai, Tamil Nadu</span>
+      </div>
+    </div>
+
+    <div style="height: 120px;"></div>
+
+  </div>
+
+  <!-- Error State -->
+  <div id="errorState" style="display: none;">
+    <div class="error-box">
+      <div style="font-size: 32px; margin-bottom: 12px;">❌</div>
+      <div><strong>Quote not found</strong></div>
+      <div style="font-size: 11px; margin-top: 8px; opacity: 0.8;">
+        This quote link may have expired. Please contact us for a new quote.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Floating Action Buttons -->
+<div class="footer">
+  <div class="footer-content">
+    <button class="btn btn-primary" onclick="contactWhatsApp()" id="whatsappBtn">💬 WhatsApp Us</button>
+    <button class="btn btn-secondary" onclick="callUs()" id="callBtn">📞 Call Now</button>
+  </div>
+</div>
+
+<script>
+
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyC2c1V3cYDX5Njc78BGvbr43caM089IuiE",
+  authDomain: "evp-crm.firebaseapp.com",
+  databaseURL: "https://evp-crm-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "evp-crm",
+  storageBucket: "evp-crm.firebasestorage.app",
+  messagingSenderId: "78324247402",
+  appId: "1:78324247402:web:f4060a2bf5b04baf411313"
+};
+
+const CATERING_PHONE = '9696962666';
+let db = null;
+let dbReady = false;
+let quoteData = null;
+
+// Initialize Firebase
+function initializeFirebase() {
+  try {
+    if (typeof firebase === 'undefined' || !firebase) {
+      setTimeout(initializeFirebase, 500);
+      return;
+    }
+    
+    if (firebase.apps && firebase.apps.length > 0) {
+      db = firebase.database();
+      dbReady = true;
+      loadQuote();
+    } else {
+      firebase.initializeApp(FIREBASE_CONFIG);
+      db = firebase.database();
+      dbReady = true;
+      loadQuote();
+    }
+  } catch (error) {
+    console.error('Firebase init error:', error);
+    setTimeout(initializeFirebase, 1000);
+  }
+}
+
+// Get quote ID from URL
+function getQuoteId() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('q');
+}
+
+// Load quote from Firebase
+function loadQuote() {
+  if (!dbReady || !db) {
+    setTimeout(loadQuote, 500);
+    return;
+  }
+
+  const quoteId = getQuoteId();
+  
+  if (!quoteId) {
+    // Show demo quote if no ID provided (for testing)
+    loadDemoQuote();
+    return;
+  }
+
+  db.ref(`catering_enquiries/${quoteId}`).once('value', snapshot => {
+    if (snapshot.exists()) {
+      quoteData = snapshot.val();
+      quoteData.id = quoteId;
+      renderQuote();
+    } else {
+      showError();
+    }
+  }, error => {
+    console.error('Error loading quote:', error);
+    showError();
+  });
+}
+
+// Load demo quote for testing
+function loadDemoQuote() {
+  quoteData = {
+    id: 'DEMO123456789',
+    name: 'John Doe',
+    phone: '9876543210',
+    eventType: 'Wedding',
+    eventDate: '2026-12-15',
+    guestCount: 250,
+    venue: 'Grand Convention Hall, Chennai',
+    status: 'new'
+  };
+  renderQuote();
+  
+  // Show demo mode indicator
+  const info = document.querySelector('.info-box');
+  info.innerHTML = '📋 <strong>DEMO MODE</strong> - This is a sample quote. In production, each customer gets a unique quote link.';
+}
+
+// Render quote
+function renderQuote() {
+  if (!quoteData) return;
+
+  const estimatedCostPerGuest = 400; // Default estimate, can be customized
+
+  // Update UI
+  document.getElementById('quoteId').textContent = quoteData.id;
+  document.getElementById('clientName').textContent = quoteData.name || 'N/A';
+  document.getElementById('clientPhone').textContent = quoteData.phone || 'N/A';
+  document.getElementById('eventType').textContent = quoteData.eventType || 'N/A';
+  document.getElementById('eventDate').textContent = formatDate(quoteData.eventDate);
+  document.getElementById('guestCount').textContent = (quoteData.guestCount || 0) + ' people';
+  document.getElementById('venue').textContent = quoteData.venue || 'TBD';
+
+  document.getElementById('costPerGuest').textContent = '₹' + estimatedCostPerGuest.toLocaleString('en-IN');
+  document.getElementById('totalGuests').textContent = quoteData.guestCount || 0;
+  
+  const totalCost = (quoteData.guestCount || 0) * estimatedCostPerGuest;
+  document.getElementById('totalCost').textContent = '₹' + totalCost.toLocaleString('en-IN');
+
+  // Update status badge
+  const statusElement = document.getElementById('statusBadge');
+  if (quoteData.status === 'confirmed') {
+    statusElement.textContent = 'Confirmed';
+    statusElement.className = 'status-badge status-confirmed';
+  } else if (quoteData.status === 'synced') {
+    statusElement.textContent = 'From Event';
+    statusElement.className = 'status-badge status-synced';
+  }
+
+  // Show quote content
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('quoteContent').style.display = 'block';
+}
+
+// Show error
+function showError() {
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('errorState').style.display = 'block';
+}
+
+// Format date
+function formatDate(dateStr) {
+  if (!dateStr) return 'N/A';
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
+// Contact WhatsApp
+function contactWhatsApp() {
+  if (!quoteData) return;
+  
+  const message = `Hi! 🍽️ I received my catering quote (#${quoteData.id.substring(0, 8)}). I'd like to discuss menu options for my ${quoteData.eventType} on ${formatDate(quoteData.eventDate)} for ${quoteData.guestCount} guests.`;
+  
+  const waLink = `https://wa.me/91${CATERING_PHONE}?text=${encodeURIComponent(message)}`;
+  window.open(waLink, '_blank');
+}
+
+// Call us
+function callUs() {
+  window.location.href = `tel:+91${CATERING_PHONE}`;
+}
+
+// Initialize on load
+window.addEventListener('load', initializeFirebase);
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeFirebase);
+} else {
+  initializeFirebase();
+}
+
+</script>
+
+</body>
+</html>

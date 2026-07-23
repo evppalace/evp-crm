@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalyana Sapadu - Catering Packages</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-green: #1a5c2e;
+            --dark-green: #123d1e;
+            --light-green: #2a7a42;
+            --gold: #c8920a;
+            --light-gold: #e8b020;
+            --cream-bg: #fafdf8;
+            --white: #ffffff;
+            --text: #1a2218;
+            --border: #e0e0e0;
+            --light-gray: #f5f5f5;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--cream-bg);
+            color: var(--text);
+        }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+            padding: 25px 20px;
+            color: var(--white);
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .logo-img {
+            width: 60px;
+            height: 60px;
+            background: var(--white);
+            border-radius: 8px;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 6px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--light-gold);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header p {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
+        /* MAIN CONTAINER */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .intro-text {
+            text-align: center;
+            color: var(--text);
+            margin-bottom: 40px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .intro-text .highlight {
+            color: var(--primary-green);
+            font-weight: 700;
+        }
+
+        /* CATEGORY SECTION */
+        .category-section {
+            margin-bottom: 50px;
+        }
+
+        .category-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--primary-green);
+            margin-bottom: 25px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .category-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--light-gold);
+            border-radius: 2px;
+        }
+
+        /* PACKAGES GRID */
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        /* PACKAGE CARD */
+        .package-card {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .package-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            border-color: var(--light-green);
+        }
+
+        .package-header {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--light-green) 100%);
+            color: var(--white);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .package-code {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--light-gold);
+            margin-bottom: 8px;
+        }
+
+        .package-name {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0;
+            line-height: 1.3;
+        }
+
+        .package-tagline {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        .package-body {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .package-price-box {
+            background: var(--light-gray);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .package-price-amount {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .package-price-unit {
+            font-size: 12px;
+            color: #666;
+            margin-top: 3px;
+        }
+
+        .package-description {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+
+        .package-btn {
+            width: 100%;
+            background: var(--primary-green);
+            color: var(--white);
+            border: none;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .package-btn:hover {
+            background: var(--dark-green);
+            transform: scale(1.02);
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--light-green) 100%);
+            color: var(--white);
+            padding: 25px;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .modal-header-content h2 {
+            font-size: 24px;
+            margin: 0 0 5px 0;
+            font-weight: 700;
+        }
+
+        .modal-header-content p {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            margin: 0;
+        }
+
+        .modal-header-price {
+            text-align: right;
+        }
+
+        .modal-price-amount {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--light-gold);
+            line-height: 1;
+        }
+
+        .modal-price-unit {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 3px;
+        }
+
+        .close-btn {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--white);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .close-btn:hover {
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .menu-section {
+            margin-bottom: 20px;
+        }
+
+        .menu-section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary-green);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--light-gold);
+        }
+
+        .menu-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .menu-item-chip {
+            background: var(--light-gray);
+            color: var(--text);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+        }
+
+        .menu-item-chip:hover {
+            background: var(--light-green);
+            color: var(--white);
+            border-color: var(--light-green);
+        }
+
+        .special-item {
+            background: var(--light-gold);
+            color: var(--primary-green);
+            font-weight: 600;
+        }
+
+        .special-item:hover {
+            background: var(--gold);
+            color: var(--white);
+        }
+
+        /* FOOTER CTA */
+        .footer-cta {
+            background: var(--primary-green);
+            color: var(--white);
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .footer-cta p {
+            margin-bottom: 20px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cta-btn.whatsapp {
+            background: #25D366;
+            color: white;
+        }
+
+        .cta-btn.call {
+            background: var(--light-gold);
+            color: var(--primary-green);
+        }
+
+        .cta-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* MODAL CTA */
+        .modal-cta {
+            background: var(--light-gray);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .modal-cta p {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--primary-green);
+        }
+
+        .modal-cta-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .modal-cta-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .modal-cta-btn.whatsapp {
+            background: #25D366;
+            color: white;
+        }
+
+        .modal-cta-btn.call {
+            background: var(--light-gold);
+            color: var(--primary-green);
+        }
+
+        .modal-cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .packages-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+                max-height: 90vh;
+            }
+
+            .modal-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .modal-header-price {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-img">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Ccircle cx='100' cy='100' r='90' fill='%231a5c2e'/%3E%3Ctext x='100' y='120' font-size='80' font-weight='bold' fill='white' text-anchor='middle'%3EKS%3C/text%3E%3C/svg%3E" alt="Kalyana Sapadu">
+                </div>
+                <div>
+                    <h1>Kalyana Sapadu</h1>
+                    <p>🍽️ Catering & Cloud Kitchen</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="container">
+        <div class="intro-text">
+            <p>Select your perfect catering package to see the <span class="highlight">complete menu</span> and place your order</p>
+        </div>
+
+        <!-- DINNER PACKAGES -->
+        <div class="category-section">
+            <div class="category-title">🍽️ Dinner Packages</div>
+            <div class="packages-grid" id="dinnerGrid"></div>
+        </div>
+
+        <!-- BREAKFAST PACKAGES -->
+        <div class="category-section">
+            <div class="category-title">🌅 Breakfast Packages</div>
+            <div class="packages-grid" id="breakfastGrid"></div>
+        </div>
+    </div>
+
+    <!-- FOOTER CTA -->
+    <div class="footer-cta">
+        <p>Questions? Get in touch with us!</p>
+        <div class="cta-buttons">
+            <button class="cta-btn whatsapp" onclick="sendWhatsApp('')">
+                💬 WhatsApp Us
+            </button>
+            <button class="cta-btn call" onclick="makeCall()">
+                ☎️ Call Now
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL -->
+    <div id="packageModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header-content">
+                    <p id="modalCode"></p>
+                    <h2 id="modalName"></h2>
+                </div>
+                <div class="modal-header-price">
+                    <div class="modal-price-amount" id="modalPrice"></div>
+                    <div class="modal-price-unit" id="modalUnit"></div>
+                </div>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        // COMPREHENSIVE PACKAGE DATA
+        const packages = {
+            dinner: [
+                {
+                    code: 'D-01',
+                    name: 'Mooladhaaram',
+                    subtitle: 'The Foundation',
+                    price: '₹350',
+                    unit: 'per leaf',
+                    description: 'Classic banana leaf meal with traditional items',
+                    menu: {
+                        'Welcome': ['Butter Milk (Moru)', 'Filter Coffee / Tea'],
+                        'Banana Leaf — Main': ['Steamed Rice (Unlimited)', 'Ghee', 'Paruppu (Dal)', 'Kalyana Sambar', 'Tomato Rasam', 'Mor Kuzhambu', 'Kootu (1 variety)', 'Poriyal (1 variety)', 'Appalam', 'Vadam', 'Pickle (Urugai)'],
+                        'Bread & Sides': ['Poori (2 nos.)', 'Potato Masala'],
+                        'Sweet': ['Semiya Payasam'],
+                        'Closing': ['Curd Rice', 'Papad']
+                    }
+                },
+                {
+                    code: 'D-02',
+                    name: 'Kalyana Virundhu',
+                    subtitle: 'The Wedding Feast',
+                    price: '₹400',
+                    unit: 'per leaf',
+                    description: 'Enhanced spread with starters & multiple varieties',
+                    menu: {
+                        'Welcome': ['Butter Milk (Moru)', 'Filter Coffee / Tea', 'Lemon Sherbet'],
+                        'Starters': ['Medu Vada (2 nos.)'],
+                        'Banana Leaf — Enhanced': ['Steamed Rice (Unlimited)', 'Ghee', 'Paruppu', 'Kalyana Sambar', 'Tomato / Milagu Rasam', 'Mor Kuzhambu', 'Kootu (2 varieties)', 'Poriyal (2 varieties)', 'Appalam + Vadam', 'Pickle + Thokku'],
+                        'Bread & Sides': ['Poori (2 nos.)', 'Chapati (1 no.)', 'Potato Sagu'],
+                        'Sweets': ['Semiya Payasam', 'Poli (Puran Poli)'],
+                        'Closing': ['Curd Rice', 'Papad']
+                    }
+                },
+                {
+                    code: 'D-03',
+                    name: 'Maangalya Saapadu',
+                    subtitle: 'The Auspicious Spread',
+                    price: '₹450',
+                    unit: 'per leaf',
+                    description: 'Premium spread with multiple curries & rice varieties',
+                    menu: {
+                        'Welcome': ['Lemon Sherbet / Panakam', 'Filter Coffee'],
+                        'Starters': ['Medu Vada (2 nos.)', 'Masala Vada (1 no.)'],
+                        'Banana Leaf': ['Steamed Rice (Unlimited)', 'Ghee', 'Paruppu', 'Kalyana Sambar', 'Tomato Rasam', 'Pineapple Rasam', 'Mor Kuzhambu', 'Kootu (2 varieties)', 'Poriyal (2 varieties)', 'Appalam + Vadam', 'Pickle + Thokku + Podi'],
+                        'Rice Varieties': ['Lemon Rice', 'Tamarind Rice (Puliyodharai)'],
+                        'Bread & Curry': ['Poori (2 nos.) + Potato Masala', 'Chapati (2 nos.) + Dal'],
+                        'Sweets': ['Semiya Payasam', 'Poli', 'Kesari'],
+                        'Closing': ['Curd Rice', 'Papad']
+                    }
+                },
+                {
+                    code: 'D-05',
+                    name: 'Vizhaa Saapadu',
+                    subtitle: 'The Celebration Meal',
+                    price: '₹500',
+                    unit: 'per person',
+                    description: 'Full South + North buffet with 5 starters',
+                    menu: {
+                        'Welcome': ['Tender Coconut / Mocktail', 'Filter Coffee Live Counter'],
+                        'Starters (5 varieties)': ['Medu Vada', 'Paneer Tikka', 'Cocktail Samosa', 'Veg Spring Roll', 'Cheese Corn Balls'],
+                        'South Indian Buffet': ['Full banana leaf spread', 'Lemon / Tamarind / Tomato Rice', 'Mor Kuzhambu', '3 Kootu + 3 Poriyal'],
+                        'North Indian Buffet': ['Paneer Butter Masala', 'Dal Makhani', 'Veg Biryani / Pulao', 'Naan (2 nos.) + Roti', 'Raita + Pickle'],
+                        'Sweets & Dessert': ['Semiya Payasam', 'Poli', 'Gulab Jamun', 'Bread Halwa', 'Ice Cream (2 flavours)'],
+                        'Closing': ['Filter Coffee', 'Curd Rice']
+                    }
+                },
+                {
+                    code: 'D-10',
+                    name: 'Maharaja Virundhu',
+                    subtitle: 'The Royal Grand',
+                    price: '₹600',
+                    unit: 'per person',
+                    description: 'Ultimate luxury meal with live counters & premium items',
+                    menu: {
+                        'Royal Welcome Lounge': ['Mocktail Bar (5 options)', 'Tender Coconut', 'Cold-Pressed Juice Station', 'Welcome Amuse-Bouche'],
+                        'Starters (15 varieties)': ['Medu Vada', 'Paneer Tikka', 'Samosa', 'Spring Roll', 'Cheese Corn Balls', 'Paniyaaram', 'Veg Cutlet', 'Coin Parotta', 'Paneer Shaslik', 'Veg Seekh Kebab', 'Mozzarella Sticks', 'Loaded Nachos'],
+                        'Ultimate Grand Buffet': ['Complete South + North spread', 'Lebanese Corner (Hummus + Pita + Falafel)', 'Biryani Live Counter'],
+                        'Sweets & Grand Dessert Bar': ['Gulab Jamun Live Khoa Counter', 'Payasam Varieties (4)', 'Jalebi Fresh Counter', 'Kulfi on Stick (5 flavours)', 'Ice Cream (3+ flavours)', 'Fruit Salad'],
+                        'Closing Ceremony': ['Premium Paan Bar (7 varieties)', 'Luxury Filter Coffee with Jaggery', 'Curd Rice']
+                    }
+                }
+            ],
+            breakfast: [
+                {
+                    code: 'B-01',
+                    name: 'Kaalai Virundhu',
+                    subtitle: 'Morning Welcome',
+                    price: '₹250',
+                    unit: 'per person',
+                    description: 'Simple breakfast with choice of tiffin',
+                    menu: {
+                        'Choice of Tiffin': ['Idli (3 nos.) OR Dosa (2 nos.)'],
+                        'Accompaniments': ['Sambar', 'Coconut Chutney', 'Tomato Chutney'],
+                        'Beverage': ['Filter Coffee / Tea']
+                    }
+                },
+                {
+                    code: 'B-03',
+                    name: 'Thirumana Kaalai',
+                    subtitle: 'Wedding Morning',
+                    price: '₹300',
+                    unit: 'per person',
+                    description: 'Wedding morning spread with multiple tiffins',
+                    menu: {
+                        'Tiffin Varieties': ['Idli (2 nos.)', 'Medu Vada (2 nos.)', 'Masala Dosa (1 no.)', 'Pongal (1 portion)'],
+                        'Accompaniments': ['Sambar (unlimited)', 'Coconut + Tomato + Mint Chutney', 'Podi + Ghee'],
+                        'Sweet': ['Kesari (Halwa)'],
+                        'Beverage': ['Filter Coffee / Tea']
+                    }
+                },
+                {
+                    code: 'B-05',
+                    name: 'Kalyanam Kaalai',
+                    subtitle: 'The Marriage Morning',
+                    price: '₹350',
+                    unit: 'per person',
+                    description: 'Complete breakfast with 6+ tiffins & multiple varieties',
+                    menu: {
+                        'Tiffin Varieties (6+)': ['Idli (2 nos.)', 'Medu Vada (2 nos.)', 'Masala Dosa', 'Rava Dosa', 'Pongal', 'Upma'],
+                        'Sevai Corner': ['Lemon Sevai', 'Coconut Sevai'],
+                        'Poori Counter': ['Poori (2 nos.) + Potato Masala'],
+                        'Accompaniments': ['Sambar (unlimited)', '4 Chutney Varieties', 'Podi + Ghee', 'Pickle'],
+                        'Sweet': ['Semiya Payasam', 'Kesari'],
+                        'Beverage': ['Filter Coffee (unlimited)', 'Cold Drink']
+                    }
+                },
+                {
+                    code: 'B-08',
+                    name: 'Rajasa Kaalai',
+                    subtitle: 'Royal Morning',
+                    price: '₹380',
+                    unit: 'per person',
+                    description: 'Full South + North spread with premium items',
+                    menu: {
+                        'Welcome': ['Mocktail / Tender Coconut', 'Panakam / Lemon Sharbat'],
+                        'Full South Indian Spread': ['Complete B-07 spread', 'Ghee Roast Dosa', 'Poori + Kurma'],
+                        'North Indian': ['Aloo Paratha', 'Chole Bhature', 'Rajma Rice'],
+                        'Accompaniments': ['Sambar (unlimited)', '5 Chutneys', 'Podi + Ghee'],
+                        'Sweet': ['Semiya Payasam', 'Kesari', 'Poli', 'Gulab Jamun'],
+                        'Beverage': ['Fresh Juice (5 varieties)', 'Filter Coffee Live', 'Cold Drinks']
+                    }
+                },
+                {
+                    code: 'B-10',
+                    name: 'Maharaja Kaalai',
+                    subtitle: 'The Ultimate Morning',
+                    price: '₹400',
+                    unit: 'per person',
+                    description: 'Complete grand buffet with live counters',
+                    menu: {
+                        'Royal Welcome Lounge': ['Mocktail Bar (4 options)', 'Tender Coconut', 'Cold-Pressed Welcome Juice', 'Fruit Welcome Bowl'],
+                        'Complete Grand Buffet': ['Live Idli Steaming Counter', 'Dosa Varieties (10+)', 'Live Juice Bar', 'Continental Corner (Toast + Egg Options)'],
+                        'North Indian Premium': ['Chole Bhature', 'Aloo Paratha', 'Paneer Paratha', 'Dal Tadka'],
+                        'Accompaniments': ['Sambar (unlimited)', '6 Chutney Varieties', 'Podi + Ghee', 'Pickle Varieties'],
+                        'Grand Dessert': ['Chocolate Fountain with Fruits', 'Payasam (2 varieties)', 'Jalebi Fresh', 'All sweets from premium spread'],
+                        'Beverage': ['Premium Juice Bar', 'Filter Coffee / Masala Chai Live', 'Cold Drinks']
+                    }
+                }
+            ]
+        };
+
+        // RENDER PACKAGES
+        function renderPackages() {
+            renderCategory('dinner');
+            renderCategory('breakfast');
+        }
+
+        function renderCategory(category) {
+            const gridId = category === 'dinner' ? 'dinnerGrid' : 'breakfastGrid';
+            const grid = document.getElementById(gridId);
+            
+            grid.innerHTML = packages[category].map(pkg => `
+                <div class="package-card" onclick="openModal('${category}', ${packages[category].indexOf(pkg)})">
+                    <div class="package-header">
+                        <div class="package-code">Menu ${pkg.code}</div>
+                        <div class="package-name">${pkg.name}</div>
+                        <div class="package-tagline">${pkg.subtitle}</div>
+                    </div>
+                    <div class="package-body">
+                        <div class="package-price-box">
+                            <div class="package-price-amount">${pkg.price}</div>
+                            <div class="package-price-unit">${pkg.unit}</div>
+                        </div>
+                        <div class="package-description">${pkg.description}</div>
+                        <button class="package-btn">View Complete Menu</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // OPEN MODAL
+        function openModal(category, index) {
+            const pkg = packages[category][index];
+            document.getElementById('modalCode').innerHTML = `Menu ${pkg.code}`;
+            document.getElementById('modalName').innerHTML = `${pkg.name}<br><small style="font-size: 14px; color: rgba(255,255,255,0.8); font-weight: normal;">${pkg.subtitle}</small>`;
+            document.getElementById('modalPrice').innerHTML = pkg.price;
+            document.getElementById('modalUnit').innerHTML = pkg.unit;
+            
+            let menuHTML = '';
+            for (const [section, items] of Object.entries(pkg.menu)) {
+                menuHTML += `
+                    <div class="menu-section">
+                        <div class="menu-section-title">${section}</div>
+                        <div class="menu-items">
+                            ${items.map(item => {
+                                const isSpecial = item.includes('Full') || item.includes('Complete') || item.includes('All') || item.includes('Add:');
+                                return `<span class="menu-item-chip ${isSpecial ? 'special-item' : ''}">${item}</span>`;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            menuHTML += `
+                <div class="modal-cta">
+                    <p>🎉 Ready to order this package?</p>
+                    <div class="modal-cta-buttons">
+                        <button class="modal-cta-btn whatsapp" onclick="sendWhatsApp('${pkg.name}')">💬 WhatsApp</button>
+                        <button class="modal-cta-btn call" onclick="makeCall()">☎️ Call</button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('modalBody').innerHTML = menuHTML;
+            document.getElementById('packageModal').style.display = 'block';
+        }
+
+        // CLOSE MODAL
+        function closeModal() {
+            document.getElementById('packageModal').style.display = 'none';
+        }
+
+        // CLOSE MODAL ON OUTSIDE CLICK
+        window.onclick = function(event) {
+            const modal = document.getElementById('packageModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // WHATSAPP
+        function sendWhatsApp(packageName) {
+            const msg = packageName 
+                ? `Hi! I'm interested in the ${packageName} package. Can you provide more details?`
+                : `Hi! I'm interested in your catering services. Can you share package details?`;
+            const phoneNumber = '919696962666';
+            window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        // CALL
+        function makeCall() {
+            window.location.href = 'tel:+919696962666';
+        }
+
+        // INITIALIZE
+        document.addEventListener('DOMContentLoaded', renderPackages);
+    </script>
+</body>
+</html>

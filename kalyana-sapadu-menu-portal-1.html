@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1B5E3F">
+<title>Kalyana Sapadu - Premium Vegetarian Catering</title>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+<style>
+:root{
+  --bg:#F8F7F4;--dark:#1B5E3F;--card:#FFFFFF;--c2:#F5F5F0;
+  --gold:#2D8659;--gL:#4CAF7D;--gF:rgba(76,175,125,.12);
+  --bdr:rgba(76,175,125,.22);--b2:rgba(76,175,125,.08);
+  --cr:#2C2C2C;--c2r:#5A5A5A;--mu:#888888;
+  --gr:#4CAF7D;--gRF:rgba(76,175,125,.14);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--cr);font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:14px;padding-bottom:80px;min-height:100vh}
+
+.header{background:var(--dark);border-bottom:3px solid var(--gold);padding:20px 14px;text-align:center;position:sticky;top:0;z-index:50;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.logo-img{width:80px;height:80px;margin:0 auto 12px;display:block;object-fit:contain}
+.brand{font-size:20px;font-weight:800;letter-spacing:2px;color:var(--gold);margin-bottom:4px}
+.tagline{font-size:11px;color:rgba(255,255,255,0.8);margin-top:6px;font-weight:700}
+.veg-badge{display:inline-block;background:var(--gold);color:white;padding:6px 12px;border-radius:20px;font-size:10px;font-weight:800;margin-top:8px;letter-spacing:0.5px;text-transform:uppercase}
+
+.container{max-width:720px;margin:0 auto;padding:14px}
+
+.card{background:var(--card);border:1px solid #E0E0E0;border-radius:10px;padding:12px;margin-bottom:12px;box-shadow:0 2px 4px rgba(0,0,0,0.05)}
+
+.stit{color:var(--dark);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.stit::after{content:"";flex:1;height:1px;background:var(--bdr)}
+
+.filters-bar{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;padding-bottom:3px;scrollbar-width:none}
+.filters-bar::-webkit-scrollbar{display:none}
+.filter-btn{padding:6px 12px;border-radius:20px;font-size:10px;font-weight:700;cursor:pointer;border:1px solid var(--bdr);background:var(--card);color:var(--mu);white-space:nowrap;flex-shrink:0;font-family:inherit;transition:all 0.2s}
+.filter-btn.active{background:var(--gold);color:white;border-color:var(--gold)}
+
+.menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.menu-card{background:var(--card);border:2px solid #E0E0E0;border-radius:8px;padding:10px;cursor:pointer;transition:all 0.2s;position:relative}
+.menu-card:hover{border-color:var(--gold);background:#F9F9F7;transform:translateY(-2px)}
+.menu-card.selected{border-color:var(--gold);background:var(--gF);box-shadow:0 4px 12px rgba(76,175,125,0.2)}
+.menu-card.selected::before{content:'✓';position:absolute;top:4px;right:8px;font-size:16px;color:var(--gold);font-weight:800}
+
+.menu-id{font-size:10px;color:var(--gold);font-weight:800;letter-spacing:0.5px;margin-bottom:4px}
+.menu-name{font-size:11px;font-weight:800;color:var(--cr);line-height:1.2;margin-bottom:4px}
+.menu-price{font-size:12px;color:var(--dark);font-weight:800;margin-bottom:4px}
+.menu-items{font-size:9px;color:var(--mu);margin-bottom:4px}
+.menu-tier{display:inline-block;font-size:8px;padding:2px 6px;border-radius:4px;background:var(--gF);color:var(--gold);font-weight:700;text-transform:uppercase}
+.veg-icon{display:inline-block;width:8px;height:8px;background:var(--gold);border:1px solid var(--dark);border-radius:2px;margin-right:4px}
+
+.cart-summary{background:var(--gF);border:1px solid var(--bdr);border-radius:8px;padding:12px;margin-bottom:12px;sticky:top:140px;z-index:40}
+.cart-item{display:flex;justify-content:space-between;padding:6px 0;font-size:11px;border-bottom:1px solid var(--bdr);padding-bottom:6px;margin-bottom:6px}
+.cart-item:last-child{border:none;margin-bottom:0;padding-bottom:0}
+.cart-total{display:flex;justify-content:space-between;padding:8px 0;font-size:12px;font-weight:800;color:var(--dark)}
+
+.form-section{background:var(--card);border:1px solid #E0E0E0;border-radius:8px;padding:14px;margin-bottom:12px}
+.form-title{font-size:12px;font-weight:800;color:var(--dark);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.form-group{margin-bottom:10px}
+.form-label{display:block;font-size:10px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.form-input{width:100%;background:var(--c2);border:1px solid #E0E0E0;border-radius:6px;padding:10px;color:var(--cr);font-size:14px;font-family:inherit;outline:none}
+.form-input:focus{border-color:var(--gold);background:white}
+
+.btn{width:100%;padding:12px;border:none;border-radius:7px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;-webkit-appearance:none;margin-bottom:8px;transition:all 0.2s}
+.btn:active{opacity:0.8}
+.btn-primary{background:var(--dark);color:white}
+.btn-secondary{background:var(--card);border:1px solid var(--bdr);color:var(--c2r)}
+.btn:disabled{opacity:0.5;cursor:not-allowed}
+
+.step-indicator{display:flex;gap:8px;margin-bottom:12px;font-size:11px}
+.step{flex:1;padding:8px;background:var(--card);border-radius:6px;text-align:center;border:1px solid #E0E0E0;color:var(--mu)}
+.step.active{background:var(--dark);color:white;font-weight:800;border-color:var(--dark)}
+.step.done{background:var(--gr);color:white;font-weight:800;border-color:var(--gr)}
+
+.info-box{background:rgba(76,175,125,0.08);border:1px solid rgba(76,175,125,0.3);border-radius:8px;padding:10px;margin-bottom:12px;font-size:10px;color:var(--c2r);line-height:1.5}
+
+.success-box{background:var(--gRF);border:1px solid var(--bdr);border-radius:8px;padding:12px;color:var(--dark);font-size:11px;text-align:center}
+
+.bottom-bar{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #E0E0E0;padding:12px 14px;max-width:720px;margin:0 auto;width:100%;display:flex;gap:8px;box-shadow:0 -2px 8px rgba(0,0,0,0.05)}
+
+.empty-state{text-align:center;padding:40px 20px;color:var(--mu)}
+.empty-icon{font-size:48px;margin-bottom:12px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <svg class="logo-img" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <!-- Leaf/Plate design -->
+    <defs>
+      <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#2D8659;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#4CAF7D;stop-opacity:1" />
+      </linearGradient>
+    </defs>
+    
+    <!-- Plate circle -->
+    <circle cx="50" cy="50" r="45" fill="url(#goldGrad)" opacity="0.2" stroke="#2D8659" stroke-width="2"/>
+    
+    <!-- Leaf shape -->
+    <path d="M 50 20 Q 60 30 65 45 Q 60 65 50 75 Q 40 65 35 45 Q 40 30 50 20" 
+          fill="#2D8659" stroke="#ffffff" stroke-width="1.5"/>
+    
+    <!-- Inner leaf vein -->
+    <path d="M 50 25 Q 50 50 50 70" 
+          stroke="#ffffff" stroke-width="1.5" fill="none"/>
+    
+    <!-- Accent circle in center -->
+    <circle cx="50" cy="50" r="8" fill="#ffffff" opacity="0.9"/>
+    <circle cx="50" cy="50" r="5" fill="#2D8659"/>
+  </svg>
+  
+  <div class="brand">Kalyana Sapadu</div>
+  <div class="tagline">🥗 100% Pure Vegetarian Catering</div>
+  <div class="veg-badge">🌱 VEG ONLY</div>
+</div>
+
+<div class="container">
+  <div id="mainContent"></div>
+</div>
+
+<div class="bottom-bar">
+  <button class="btn btn-secondary" onclick="resetForm()" style="flex:1">🔄 Clear</button>
+  <button class="btn btn-primary" onclick="proceedToForm()" style="flex:2">Continue →</button>
+</div>
+
+<script>
+var FIREBASE_CONFIG = {
+  apiKey: "AIzaSyC2c1V3cYDX5Njc78BGvbr43caM089IuiE",
+  authDomain: "evp-crm.firebaseapp.com",
+  databaseURL: "https://evp-crm-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "evp-crm",
+  storageBucket: "evp-crm.firebasestorage.app",
+  messagingSenderId: "78324247402",
+  appId: "1:78324247402:web:f4060a2bf5b04baf411313"
+};
+
+const WHATSAPP = '919696962666';
+const PHONE = '8081111114';
+
+var db = null;
+var firebaseReady = false;
+let currentStep = 'menus';
+let selectedMenus = [];
+
+const menus = {
+  breakfast: [
+    { id: 'B-01', tier: 'bronze', tagline: 'South Indian Breakfast', price: 250, items: 8 },
+    { id: 'B-02', tier: 'bronze', tagline: 'Traditional Mix', price: 280, items: 8 },
+    { id: 'B-03', tier: 'silver', tagline: 'Premium South Indian', price: 350, items: 10 },
+    { id: 'B-04', tier: 'silver', tagline: 'Grand Breakfast', price: 380, items: 12 },
+    { id: 'B-05', tier: 'silver', tagline: 'Premium Plus', price: 400, items: 13 },
+    { id: 'B-06', tier: 'platinum', tagline: 'Luxury Buffet', price: 450, items: 17 },
+    { id: 'B-07', tier: 'platinum', tagline: 'Supreme', price: 480, items: 20 },
+    { id: 'B-08', tier: 'platinum', tagline: 'Royal Welcome', price: 520, items: 20 },
+    { id: 'B-09', tier: 'platinum', tagline: 'Premium Celebration', price: 550, items: 25 },
+    { id: 'B-10', tier: 'platinum', tagline: 'Ultimate Grand', price: 600, items: 35 }
+  ],
+  dinner: [
+    { id: 'D-01', tier: 'bronze', tagline: 'Traditional South', price: 300, items: 9 },
+    { id: 'D-02', tier: 'bronze', tagline: 'Classic Feast', price: 350, items: 12 },
+    { id: 'D-03', tier: 'silver', tagline: 'Premium Package', price: 420, items: 16 },
+    { id: 'D-04', tier: 'silver', tagline: 'Grand Experience', price: 480, items: 21 },
+    { id: 'D-05', tier: 'platinum', tagline: 'South + North', price: 550, items: 26 },
+    { id: 'D-06', tier: 'platinum', tagline: 'Premium + Counters', price: 600, items: 28 },
+    { id: 'D-07', tier: 'platinum', tagline: 'Star Package', price: 680, items: 31 },
+    { id: 'D-08', tier: 'platinum', tagline: 'Royal Celebration', price: 750, items: 33 },
+    { id: 'D-09', tier: 'platinum', tagline: 'Grand + Dessert', price: 850, items: 36 },
+    { id: 'D-10', tier: 'platinum', tagline: 'Ultimate Luxury', price: 950, items: 40 }
+  ]
+};
+
+function initFirebase() {
+  try {
+    if (firebase && !firebase.apps.length) {
+      firebase.initializeApp(FIREBASE_CONFIG);
+      db = firebase.database();
+      firebaseReady = true;
+      console.log('Firebase initialized successfully');
+    }
+  } catch(err) {
+    console.error('Firebase error:', err);
+  }
+}
+
+function waitForFirebase() {
+  const maxAttempts = 10;
+  let attempts = 0;
+  
+  const checkFirebase = setInterval(() => {
+    attempts++;
+    if (typeof firebase !== 'undefined' && firebase.database) {
+      clearInterval(checkFirebase);
+      initFirebase();
+    } else if (attempts >= maxAttempts) {
+      clearInterval(checkFirebase);
+      console.log('Firebase loading skipped');
+    }
+  }, 300);
+}
+
+function showMenus() {
+  currentStep = 'menus';
+  
+  const categories = Object.entries(menus);
+  let html = '';
+  
+  categories.forEach(([category, items]) => {
+    const categoryName = category.charAt(0).toUpperCase() + category.slice(1);
+    html += `
+      <div class="card">
+        <div class="stit">🍽️ ${categoryName}</div>
+        <div class="menu-grid">
+          ${items.map(m => `
+            <div class="menu-card ${selectedMenus.find(sm => sm.id === m.id) ? 'selected' : ''}" onclick="toggleMenu(event, ${JSON.stringify(m).replace(/"/g, '&quot;')})">
+              <div class="menu-id">${m.id}</div>
+              <div class="menu-name">${m.tagline}</div>
+              <div class="menu-price">₹${m.price}/guest</div>
+              <div class="menu-items">${m.items} items</div>
+              <span class="menu-tier">${m.tier}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  });
+  
+  if (selectedMenus.length > 0) {
+    html += `
+      <div class="cart-summary">
+        <div style="font-size:11px;font-weight:800;color:var(--dark);margin-bottom:8px">Selected Menus (${selectedMenus.length})</div>
+        ${selectedMenus.map(m => `
+          <div class="cart-item">
+            <span>${m.id} - ${m.tagline}</span>
+            <span onclick="removeMenu('${m.id}')" style="cursor:pointer;color:var(--gold);font-weight:700">✕</span>
+          </div>
+        `).join('')}
+        <div class="cart-total">
+          <span>Avg per guest:</span>
+          <span>₹${Math.round(selectedMenus.reduce((sum, m) => sum + m.price, 0) / selectedMenus.length)}</span>
+        </div>
+      </div>
+    `;
+  }
+  
+  document.getElementById('mainContent').innerHTML = html;
+}
+
+function toggleMenu(e, menu) {
+  e.stopPropagation();
+  const exists = selectedMenus.find(m => m.id === menu.id);
+  if (exists) {
+    selectedMenus = selectedMenus.filter(m => m.id !== menu.id);
+  } else {
+    selectedMenus.push(menu);
+  }
+  showMenus();
+}
+
+function removeMenu(menuId) {
+  selectedMenus = selectedMenus.filter(m => m.id !== menuId);
+  showMenus();
+}
+
+function proceedToForm() {
+  if (selectedMenus.length === 0) {
+    alert('Please select at least one menu package');
+    return;
+  }
+  showForm();
+}
+
+function showForm() {
+  currentStep = 'form';
+  
+  let html = `
+    <div class="step-indicator">
+      <div class="step done">Select Menu</div>
+      <div class="step active">Details</div>
+    </div>
+
+    <div class="info-box">
+      ✓ ${selectedMenus.length} menu(s) selected • Ready for booking
+    </div>
+
+    <div class="form-section">
+      <div class="form-title">👤 Your Details</div>
+      
+      <div class="form-group">
+        <label class="form-label">Full Name *</label>
+        <input type="text" class="form-input" id="customerName" placeholder="Your name" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Phone Number *</label>
+        <input type="tel" class="form-input" id="customerPhone" placeholder="10-digit mobile" required>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-title">📅 Event Details</div>
+      
+      <div class="form-group">
+        <label class="form-label">Event Type *</label>
+        <select class="form-input" id="eventType" required>
+          <option value="">Select event type</option>
+          <option value="Wedding">Wedding</option>
+          <option value="Reception">Reception</option>
+          <option value="Engagement">Engagement</option>
+          <option value="Birthday">Birthday</option>
+          <option value="Corporate">Corporate Event</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Event Date *</label>
+        <input type="date" class="form-input" id="eventDate" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Number of Guests (Min 100) *</label>
+        <input type="number" class="form-input" id="guestCount" placeholder="e.g., 300" min="100" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Venue Name *</label>
+        <input type="text" class="form-input" id="venue" placeholder="Event venue" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Special Requests</label>
+        <textarea class="form-input" id="notes" style="min-height:70px" placeholder="Any special requirements..."></textarea>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="stit">💰 Estimated Cost</div>
+      <div style="font-size:11px;color:var(--c2r);margin-bottom:8px">
+        Based on your selections:
+      </div>
+      <div style="font-size:12px;font-weight:700;color:var(--cr);padding:8px;background:var(--c2);border-radius:6px">
+        <div style="margin-bottom:6px">Average per guest: ₹<span id="avgPrice">0</span></div>
+        <div style="margin-bottom:6px">× <span id="displayGuests">0</span> guests</div>
+        <div style="font-size:13px;color:var(--dark);border-top:1px solid #E0E0E0;padding-top:6px;margin-top:6px">
+          Estimated Total: ₹<span id="totalCost">0</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="submitOrder()">✅ Confirm Order</button>
+    <button class="btn btn-secondary" onclick="showMenus()">← Back</button>
+  `;
+
+  document.getElementById('mainContent').innerHTML = html;
+  
+  const guestInput = document.getElementById('guestCount');
+  guestInput.addEventListener('input', calculateCost);
+  calculateCost();
+}
+
+function calculateCost() {
+  let avgPrice = selectedMenus.reduce((sum, m) => sum + m.price, 0) / selectedMenus.length;
+  let guests = parseInt(document.getElementById('guestCount').value) || 0;
+  let total = Math.round(avgPrice * guests);
+  
+  document.getElementById('avgPrice').textContent = Math.round(avgPrice);
+  document.getElementById('displayGuests').textContent = guests;
+  document.getElementById('totalCost').textContent = total.toLocaleString('en-IN');
+}
+
+function submitOrder() {
+  const name = document.getElementById('customerName').value.trim();
+  const phone = document.getElementById('customerPhone').value.trim();
+  const eventType = document.getElementById('eventType').value;
+  const eventDate = document.getElementById('eventDate').value;
+  const guestCount = parseInt(document.getElementById('guestCount').value);
+  const venue = document.getElementById('venue').value.trim();
+  const notes = document.getElementById('notes').value.trim();
+
+  if (!name || !phone || !eventType || !eventDate || !guestCount || !venue) {
+    alert('Please fill all required fields');
+    return;
+  }
+
+  if (guestCount < 100) {
+    alert('Minimum 100 guests required');
+    return;
+  }
+
+  if (!firebaseReady || !db) {
+    alert('Please try again - database connecting...');
+    return;
+  }
+
+  let avgPrice = selectedMenus.reduce((sum, m) => sum + m.price, 0) / selectedMenus.length;
+  let totalCost = Math.round(avgPrice * guestCount);
+
+  const leadId = 'CATERING_' + Date.now();
+  const leadData = {
+    id: leadId,
+    name: name,
+    phone: phone,
+    eventType: eventType,
+    eventDate: eventDate,
+    guestCount: guestCount,
+    venue: venue,
+    notes: notes,
+    menus: selectedMenus,
+    totalPerGuest: Math.round(avgPrice),
+    totalCost: totalCost,
+    status: 'new',
+    createdAt: new Date().toISOString()
+  };
+
+  db.ref('catering_leads/' + leadId).set(leadData).then(() => {
+    showSuccess(leadId, phone, name);
+  }).catch(err => {
+    alert('Error: ' + err.message);
+  });
+}
+
+function showSuccess(leadId, phone, name) {
+  let avgPrice = selectedMenus.reduce((sum, m) => sum + m.price, 0) / selectedMenus.length;
+  let guests = parseInt(document.getElementById('guestCount').value);
+  let total = Math.round(avgPrice * guests);
+
+  let html = `
+    <div class="success-box" style="padding:20px;margin-bottom:20px">
+      <div style="font-size:32px;margin-bottom:12px">✅</div>
+      <div style="font-size:14px;font-weight:800;color:var(--dark);margin-bottom:8px">Order Received!</div>
+      <div style="font-size:11px;color:var(--c2r);line-height:1.6">
+        Your catering request received!<br>
+        We'll contact you at <strong>${phone}</strong> to confirm.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="stit">📋 Order Summary</div>
+      <div style="font-size:10px;color:var(--c2r);line-height:1.7;padding:10px;background:var(--c2);border-radius:6px">
+        <div style="margin-bottom:8px"><strong>Name:</strong> ${name}</div>
+        <div style="margin-bottom:8px"><strong>Event:</strong> ${document.getElementById('eventType').value} on ${new Date(document.getElementById('eventDate').value).toLocaleDateString()}</div>
+        <div style="margin-bottom:8px"><strong>Guests:</strong> ${guests} (100% Vegetarian)</div>
+        <div style="margin-bottom:8px"><strong>Venue:</strong> ${document.getElementById('venue').value}</div>
+        <div style="border-top:1px solid #E0E0E0;padding-top:8px;margin-top:8px">
+          <strong>Selected Menus:</strong><br>
+          ${selectedMenus.map(m => `🥗 ${m.id} - ${m.tagline} (₹${m.price}/guest)`).join('<br>')}
+        </div>
+        <div style="border-top:1px solid #E0E0E0;padding-top:8px;margin-top:8px;font-size:11px;color:var(--dark);font-weight:800">
+          Estimated Total: ₹${total.toLocaleString('en-IN')}
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="window.location.href='https://wa.me/${WHATSAPP}?text=Hi%20Kalyana%20Sapadu!%20I%20just%20submitted%20my%20catering%20order.'">💬 WhatsApp Us</button>
+    <button class="btn btn-secondary" onclick="resetForm()">🔄 New Order</button>
+
+    <div style="height:20px"></div>
+  `;
+
+  document.getElementById('mainContent').innerHTML = html;
+}
+
+function resetForm() {
+  selectedMenus = [];
+  showMenus();
+}
+
+window.addEventListener('load', waitForFirebase);
+showMenus();
+</script>
+</body>
+</html>

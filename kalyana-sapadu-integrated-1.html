@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalyana Sapadu - Catering Portal | EVP Rajeshwari</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #8B6914;
+            --accent: #C8922A;
+            --gold: #E8B84B;
+            --dark: #2a1a0a;
+            --light: #F8F4EE;
+            --border: #E8D5A0;
+            --hover: #FFF3CC;
+            --bg: #FFFDF5;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            padding-bottom: 80px;
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(160deg, #fff 0%, #fffdf7 60%, #fdf6e3 100%);
+            padding: 20px 16px;
+            text-align: center;
+            border-bottom: 2px solid var(--accent);
+            box-shadow: 0 2px 20px rgba(200, 146, 42, 0.12);
+            position: sticky;
+            top: 0;
+            z-index: 90;
+        }
+
+        .header-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .header-subtitle {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--accent);
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        /* CATEGORY TABS */
+        .tabs {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 12px 0;
+            overflow-x: auto;
+            position: sticky;
+            top: 110px;
+            z-index: 85;
+        }
+
+        .tabs-wrapper {
+            display: flex;
+            gap: 8px;
+            padding: 0 16px;
+            min-width: min-content;
+        }
+
+        .tab {
+            background: white;
+            border: 1.5px solid var(--border);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border-color: var(--accent);
+        }
+
+        /* CUSTOMIZE BUTTON */
+        .customize-section {
+            padding: 16px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--hover), white);
+            border-bottom: 2px solid var(--accent);
+            margin-bottom: 8px;
+        }
+
+        .btn-customize {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(200, 146, 42, 0.2);
+            transition: all 0.3s;
+        }
+
+        .btn-customize:active {
+            transform: scale(0.98);
+        }
+
+        /* FILTER BAR */
+        .filters {
+            background: white;
+            padding: 12px 16px;
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto;
+        }
+
+        .filter-btn {
+            background: white;
+            border: 1.5px solid var(--border);
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border-color: var(--accent);
+        }
+
+        /* CONTAINER */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 20px 0 12px 0;
+            letter-spacing: 1px;
+        }
+
+        /* MENU GRID */
+        .menus-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        /* MENU CARD */
+        .menu-card {
+            background: white;
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .menu-card:active {
+            border-color: var(--accent);
+            box-shadow: 0 4px 16px rgba(200, 146, 42, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .card-image {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .card-id {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .tier-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--primary);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        .card-body {
+            padding: 12px;
+        }
+
+        .card-tagline {
+            font-size: 11px;
+            color: var(--primary);
+            margin-bottom: 6px;
+            font-weight: 600;
+            min-height: 25px;
+            line-height: 1.3;
+        }
+
+        .card-items {
+            font-size: 10px;
+            color: #999;
+            margin-bottom: 6px;
+        }
+
+        .card-price {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .btn-details {
+            flex: 1;
+            background: var(--bg);
+            color: var(--primary);
+            border: 1px solid var(--border);
+            padding: 6px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-details:active {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .btn-add {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            padding: 6px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-add:active {
+            transform: scale(0.95);
+        }
+
+        /* FLOATING CART */
+        .floating-cart {
+            position: fixed;
+            bottom: 80px;
+            right: 16px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 12px 16px;
+            border-radius: 50px;
+            box-shadow: 0 4px 16px rgba(200, 146, 42, 0.3);
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            z-index: 80;
+            transition: all 0.3s;
+        }
+
+        .floating-cart.show {
+            display: flex;
+        }
+
+        .floating-cart:active {
+            transform: scale(0.98);
+        }
+
+        .cart-badge {
+            background: rgba(255, 255, 255, 0.3);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        /* MODALS */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: flex-end;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-sheet {
+            background: white;
+            width: 100%;
+            max-height: 90vh;
+            border-radius: 16px 16px 0 0;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 20px;
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .modal-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .modal-subtitle {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+
+        .modal-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .price-display {
+            background: var(--hover);
+            padding: 16px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 16px;
+            border: 1.5px solid var(--border);
+        }
+
+        .price-label {
+            font-size: 10px;
+            color: var(--primary);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .price-amount {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--accent);
+            margin-top: 4px;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .items-section {
+            margin-bottom: 16px;
+        }
+
+        .section-header {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .item-row {
+            background: var(--bg);
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            margin-bottom: 6px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .stall-row {
+            background: linear-gradient(135deg, var(--hover), white);
+            color: var(--primary);
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        /* CUSTOMIZE MODAL */
+        .customize-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1001;
+            align-items: flex-end;
+        }
+
+        .customize-modal.active {
+            display: flex;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 12px;
+            padding: 16px;
+            border-bottom: 2px solid var(--border);
+            background: white;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 12px;
+            padding: 8px 16px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .items-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .item-checkbox {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            background: var(--bg);
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .item-checkbox:active {
+            background: var(--hover);
+            border-color: var(--accent);
+        }
+
+        .item-checkbox input {
+            margin-right: 8px;
+            cursor: pointer;
+        }
+
+        .item-checkbox label {
+            flex: 1;
+            cursor: pointer;
+            margin: 0;
+            font-size: 12px;
+        }
+
+        .custom-input {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .custom-input input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: 12px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .custom-input button {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .custom-items-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .custom-tag {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+        }
+
+        .custom-tag button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+        }
+
+        /* DETAILS FORM */
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            background: white;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            padding: 11px 13px;
+            color: var(--dark);
+            font-size: 14px;
+            font-family: 'Montserrat', sans-serif;
+            outline: none;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            border-color: var(--accent);
+            background: var(--bg);
+            box-shadow: 0 0 0 3px rgba(200, 146, 42, 0.12);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .cart-summary {
+            background: var(--hover);
+            padding: 14px;
+            border-radius: 10px;
+            margin: 16px 0;
+            border: 1.5px solid var(--border);
+        }
+
+        .summary-title {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 12px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        .summary-item:last-child {
+            margin-bottom: 0;
+            border-top: 1px solid var(--border);
+            padding-top: 8px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 8px;
+            padding: 12px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 12px;
+            border: 1.5px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-back {
+            background: white;
+            color: var(--primary);
+            border: 1.5px solid var(--border);
+        }
+
+        .nav-continue {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+        }
+
+        .nav-continue:active {
+            transform: scale(0.98);
+        }
+
+        @media (max-width: 480px) {
+            .menus-grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            }
+
+            .header-title {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <div class="header">
+        <div class="header-title">🍽️ KALYANA SAPADU</div>
+        <div class="header-subtitle">Premium Catering for Every Celebration</div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+        <div class="tabs-wrapper" id="tabsWrapper"></div>
+    </div>
+
+    <!-- CUSTOMIZE BUTTON -->
+    <div class="customize-section">
+        <button class="btn-customize" onclick="openCustomize()">
+            <i class="fas fa-wand-magic-sparkles"></i> Create Your Menu
+        </button>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="filters">
+        <button class="filter-btn active" onclick="filterByTier('')">All</button>
+        <button class="filter-btn" onclick="filterByTier('bronze')">💎 Bronze</button>
+        <button class="filter-btn" onclick="filterByTier('silver')">💎 Silver</button>
+        <button class="filter-btn" onclick="filterByTier('platinum')">👑 Platinum</button>
+    </div>
+
+    <!-- MENUS CONTAINER -->
+    <div class="container" id="menusContainer"></div>
+
+    <!-- FLOATING CART -->
+    <div class="floating-cart" id="floatingCart" onclick="showCart()">
+        <i class="fas fa-shopping-cart"></i>
+        <div class="cart-badge" id="cartCount">0</div>
+    </div>
+
+    <!-- MENU DETAILS MODAL -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-sheet" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title" id="modalId"></div>
+                    <div class="modal-subtitle" id="modalTagline"></div>
+                </div>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="price-display">
+                    <div class="price-label">Price Per Guest</div>
+                    <div class="price-amount">₹<span id="modalPrice">0</span></div>
+                </div>
+                <div class="items-section" id="itemsSection"></div>
+                <div class="items-section" id="stallsSection"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" onclick="addToCart()">+ Add to Selection</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOMIZE MODAL -->
+    <div class="customize-modal" id="customizeModal">
+        <div class="modal-sheet" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title">✨ Create Menu</div>
+                </div>
+                <button class="modal-close" onclick="closeCustomize()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="switchTab('select')">📋 Select</button>
+                    <button class="tab-btn" onclick="switchTab('manual')">✍️ Manual</button>
+                    <button class="tab-btn" onclick="switchTab('details')">📝 Details</button>
+                </div>
+
+                <div class="tab-content active" id="selectTab" style="padding: 16px;">
+                    <div class="section-header">Available Items</div>
+                    <div class="items-selector" id="itemsSelector"></div>
+                </div>
+
+                <div class="tab-content" id="manualTab" style="padding: 16px;">
+                    <div class="section-header">Add Custom Items</div>
+                    <div class="custom-input">
+                        <input type="text" id="customInput" placeholder="Type item name...">
+                        <button onclick="addCustomItem()">+ Add</button>
+                    </div>
+                    <div class="custom-items-list" id="customList"></div>
+                </div>
+
+                <div class="tab-content" id="detailsTab" style="padding: 16px;">
+                    <div class="form-group">
+                        <label class="form-label">Menu Name</label>
+                        <input type="text" class="form-input" id="customName" placeholder="My Custom Menu">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Price per Guest (₹) *</label>
+                        <input type="number" class="form-input" id="customPrice" placeholder="500" min="50">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Live Counters</label>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <label style="margin: 0; font-weight: 500; color: var(--dark);">
+                                <input type="checkbox" id="counter1"> Live Dosa
+                            </label>
+                            <label style="margin: 0; font-weight: 500; color: var(--dark);">
+                                <input type="checkbox" id="counter2"> Live Biryani
+                            </label>
+                            <label style="margin: 0; font-weight: 500; color: var(--dark);">
+                                <input type="checkbox" id="counter3"> Chaat Corner
+                            </label>
+                            <label style="margin: 0; font-weight: 500; color: var(--dark);">
+                                <input type="checkbox" id="counter4"> Fresh Juice
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cart-summary">
+                    <div class="summary-title">Summary</div>
+                    <div class="summary-item">
+                        <span>Items:</span>
+                        <span id="summaryItems">0</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Counters:</span>
+                        <span id="summaryCounters">0</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Price:</span>
+                        <span>₹<span id="summaryPrice">0</span></span>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom-nav">
+                <button class="nav-btn nav-back" onclick="closeCustomize()">Cancel</button>
+                <button class="nav-btn nav-continue" onclick="addCustomMenu()">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CLIENT DETAILS MODAL -->
+    <div class="modal-overlay" id="detailsModal">
+        <div class="modal-sheet" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-title">📋 Event Details</div>
+                <button class="modal-close" onclick="closeDetails()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">👤 Full Name *</label>
+                    <input type="text" class="form-input" id="clientName" placeholder="Your name">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">📞 Phone Number *</label>
+                    <input type="tel" class="form-input" id="clientPhone" placeholder="10-digit number">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">📧 Email</label>
+                    <input type="email" class="form-input" id="clientEmail" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">🎉 Event Type *</label>
+                    <select class="form-select" id="eventType">
+                        <option value="">-- Select --</option>
+                        <option value="Wedding">Wedding</option>
+                        <option value="Corporate">Corporate</option>
+                        <option value="Birthday">Birthday</option>
+                        <option value="Engagement">Engagement</option>
+                        <option value="Anniversary">Anniversary</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">📅 Event Date *</label>
+                    <input type="date" class="form-input" id="eventDate">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">👥 Number of Guests *</label>
+                    <input type="number" class="form-input" id="guestCount" placeholder="Expected guests" min="50">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">📍 Venue</label>
+                    <input type="text" class="form-input" id="venue" placeholder="Venue location">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">💬 Special Requests</label>
+                    <textarea class="form-textarea" id="notes" placeholder="Any special dietary needs or preferences..."></textarea>
+                </div>
+
+                <div class="cart-summary">
+                    <div class="summary-title">📊 Selected Menus</div>
+                    <div id="cartSummary"></div>
+                    <div class="summary-item">
+                        <span>Total (per guest):</span>
+                        <span>₹<span id="totalPerGuest">0</span></span>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom-nav">
+                <button class="nav-btn nav-back" onclick="closeDetails()">Back</button>
+                <button class="nav-btn nav-continue" onclick="submitOrder()">📱 Send on WhatsApp</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const menus = {
+            breakfast: [
+                { id: 'B-01', tier: 'bronze', tagline: 'South Indian Breakfast', price: 250, items: ['Idli', 'Masala Dosa', 'Poori', 'Sambar', 'Coconut Chutney', 'Upma', 'Buttermilk', 'Appalam'], stalls: ['Live Dosa (6 varieties)'] },
+                { id: 'B-02', tier: 'bronze', tagline: 'Traditional Mix', price: 280, items: ['Uthappam', 'Masala Dosa', 'Idli Sambar', 'Poori Masala', 'Pongal', 'Chutneys (3)', 'Appalam', 'Pickle'], stalls: ['Live Dosa (6 varieties)'] },
+                { id: 'B-03', tier: 'silver', tagline: 'Premium South Indian', price: 350, items: ['Ghee Roast Dosa', 'Masala Dosa', 'Butter Poori', 'Paneer Dosa', 'Uthappam', 'Pongal', 'Idli Fry', 'Sambar', 'Chutneys (3)', 'Appalam'], stalls: ['Live Dosa (7 varieties)', 'Chaat Corner'] },
+                { id: 'B-04', tier: 'silver', tagline: 'Grand Breakfast', price: 380, items: ['Cheese Dosa', 'Paneer Dosa', 'Ghee Roast', 'Butter Poori', 'Pongal', 'Uppuma', 'Idli Fry', 'Chutneys (4)', 'Sambar', 'Pickle', 'Curd', 'Filter Coffee'], stalls: ['Live Dosa (8)', 'Mini Chaat'] },
+                { id: 'B-05', tier: 'silver', tagline: 'Premium Breakfast Plus', price: 400, items: ['Masala Dosa', 'Paneer Dosa', 'Ghee Roast', 'Butter Poori', 'Pongal', 'Idli Fry', 'Uthappam', 'Chutneys (5)', 'Appalam', 'Pickle', 'Curd', 'Filter Coffee', 'Fresh Juice'], stalls: ['Live Dosa (8)', 'Chaat Corner', 'Juice Bar'] },
+                { id: 'B-06', tier: 'platinum', tagline: 'Luxury Buffet', price: 450, items: ['Ghee Roast', 'Paneer Dosa', 'Cheese Dosa', 'Butter Poori', 'Pongal', 'Idli Fry', 'Uthappam', 'Pongal Curry', 'Chutneys (5)', 'Sambar', 'Appalam', 'Pickle (2)', 'Curd', 'Coffee', 'Milk', 'Juice', 'Payasam'], stalls: ['Live Dosa (10)', 'Chaat (6)', '90s Stall', 'Juice Bar (5)'] },
+                { id: 'B-07', tier: 'platinum', tagline: 'Supreme Breakfast', price: 480, items: ['20+ Premium Items'], stalls: ['Live Dosa (10)', 'Steam Counter', 'Chaat', '90s Stall', 'Paan Counter', 'Juice+Smoothie'] },
+                { id: 'B-08', tier: 'platinum', tagline: 'Royal Welcome', price: 520, items: ['Mocktail (4)', 'Tender Coconut', 'Welcome Juice', 'Paneer Dosa', 'Cheese Dosa', 'Ghee Roast', 'Butter Poori', 'Premium Items (15+)'], stalls: ['Live Dosa (10)', 'Steam Counter', '90s Stall', 'Chaat (8)', 'Paan', 'Juice Bar'] },
+                { id: 'B-09', tier: 'platinum', tagline: 'Premium Celebration', price: 550, items: ['25+ Premium Items'], stalls: ['Live Dosa', 'Steam Counter', 'Chaat', '90s Stall', 'Juice Bar', 'Paan', 'Chocolate Fountain'] },
+                { id: 'B-10', tier: 'platinum', tagline: 'Ultimate Grand', price: 600, items: ['35+ Premium Items'], stalls: ['Live Dosa (10+)', 'Steam', 'Chaat (8)', '90s', 'Juice', 'Paan', 'Chocolate Fountain', 'Kheer'] }
+            ],
+            dinner: [
+                { id: 'D-01', tier: 'bronze', tagline: 'Traditional South', price: 300, items: ['Rice', 'Sambar', 'Rasam', 'Vegetable Curry', 'Poriyal', 'Appalam', 'Pickle', 'Curd', 'Buttermilk'], stalls: [] },
+                { id: 'D-02', tier: 'bronze', tagline: 'Classic Feast', price: 350, items: ['Lemon Rice', 'Curd Rice', 'Sambar', 'Rasam', 'Paneer Curry', 'Veg Curry', 'Poriyal', 'Kootu', 'Appalam', 'Pickle', 'Curd', 'Payasam'], stalls: ['Live Dosa (6)'] },
+                { id: 'D-03', tier: 'silver', tagline: 'Premium Package', price: 420, items: ['Biryani', 'Lemon Rice', 'Coconut Rice', 'Sambar (2)', 'Rasam', 'Paneer Curry', 'Mushroom Masala', 'Veg Curry', 'Poriyal', 'Kootu', 'Aviyal', 'Brinjal Fry', 'Appalam', 'Pickle', 'Curd', 'Payasam'], stalls: ['Live Biryani'] },
+                { id: 'D-04', tier: 'silver', tagline: 'Grand Experience', price: 480, items: ['Veg Biryani', 'Lemon Rice', 'Coconut Rice', 'Tamarind Rice', 'Sambar (2)', 'Rasam', 'Kara Kuzhambu', 'Paneer Butter', 'Paneer Curry', 'Veg Curry', 'Dal Makhani', '10+ Items'], stalls: ['Live Biryani', 'Chaat'] },
+                { id: 'D-05', tier: 'platinum', tagline: 'South + North', price: 550, items: ['Biryani (2)', 'Pulao', 'Rice (3)', 'Sambar (2)', 'Rasam', 'Paneer Butter', 'Paneer Curry', 'Dal Makhani', 'Veg Curry (2)', '20+ Items'], stalls: ['Live Biryani', 'Chaat (8)', 'Paan'] },
+                { id: 'D-06', tier: 'platinum', tagline: 'Premium + Counters', price: 600, items: ['Biryani (2)', 'Pulao', 'Veg Biryani', 'Rice (3)', 'Sambar (3)', 'Rasam', '20+ Premium Items'], stalls: ['Live Biryani', 'Chaat (8)', 'Paan', '90s Stall'] },
+                { id: 'D-07', tier: 'platinum', tagline: 'Star Package', price: 680, items: ['Biryani (3)', 'Pulao (2)', 'Rice (4)', 'Sambar (3)', '25+ Items'], stalls: ['Live Biryani', 'Pasta Counter', 'Asian Wok', 'Chaat (6)', 'Juice (5)', 'Paan'] },
+                { id: 'D-08', tier: 'platinum', tagline: 'Royal Celebration', price: 750, items: ['Biryani (3)', 'Pulao (2)', 'Rice (4)', 'Sambar (3)', '30+ Premium Items'], stalls: ['Live Biryani', 'Pasta', 'Wok', 'Chaat (8)', 'Juice', 'Fries', '90s', 'Paan (7)'] },
+                { id: 'D-09', tier: 'platinum', tagline: 'Grand + Dessert', price: 850, items: ['35+ Premium Items'], stalls: ['Live Biryani', 'Pasta', 'Wok', 'Chaat (8)', 'Juice', 'Fries', '90s', 'Paan (7)', 'Chocolate Fountain', 'Live Jalebi'] },
+                { id: 'D-10', tier: 'platinum', tagline: 'Ultimate Luxury', price: 950, items: ['40+ Premium Items'], stalls: ['Live Biryani', 'Pasta', 'Wok', 'Chaat (8)', 'Juice', 'Fries', '90s', 'Paan (7)', 'Chocolate Fountain', 'Jalebi', 'Dessert Counter'] }
+            ]
+        };
+
+        let cart = [];
+        let currentCategory = 'breakfast';
+        let currentTier = '';
+        let selectedItems = [];
+        let customItems = [];
+
+        function getAllItems() {
+            let items = new Set();
+            Object.values(menus).forEach(cat => cat.forEach(m => m.items.forEach(i => items.add(i))));
+            return Array.from(items).sort();
+        }
+
+        function initTabs() {
+            document.getElementById('tabsWrapper').innerHTML = `
+                <button class="tab active" onclick="selectTab('breakfast')">🌅 Breakfast</button>
+                <button class="tab" onclick="selectTab('dinner')">🌙 Dinner</button>
+            `;
+        }
+
+        function selectTab(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            renderMenus();
+        }
+
+        function filterByTier(tier) {
+            currentTier = tier;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            renderMenus();
+        }
+
+        function renderMenus() {
+            const container = document.getElementById('menusContainer');
+            let list = menus[currentCategory];
+            if (currentTier) list = list.filter(m => m.tier === currentTier);
+
+            let html = `<div class="section-title">${currentCategory === 'breakfast' ? '🌅 Breakfast' : '🌙 Dinner'}</div><div class="menus-grid">`;
+            html += list.map(m => `
+                <div class="menu-card" onclick="openMenu('${m.id}', '${currentCategory}')">
+                    <div class="card-image">
+                        <div class="card-id">${m.id}</div>
+                        <div class="tier-badge">${m.tier}</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-tagline">${m.tagline}</div>
+                        <div class="card-items">📋 ${m.items.length} items</div>
+                        <div class="card-price">₹${m.price}</div>
+                        <div class="card-actions">
+                            <button class="btn-details" onclick="event.stopPropagation(); openMenu('${m.id}', '${currentCategory}')">Details</button>
+                            <button class="btn-add" onclick="event.stopPropagation(); quickAdd('${m.id}', '${currentCategory}')">+ Add</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function openMenu(id, cat) {
+            const m = menus[cat].find(x => x.id === id);
+            document.getElementById('modalId').textContent = m.id;
+            document.getElementById('modalTagline').textContent = m.tagline;
+            document.getElementById('modalPrice').textContent = m.price;
+
+            let items = '<div class="section-header">📋 Items (' + m.items.length + ')</div>';
+            m.items.forEach(i => items += '<div class="item-row">✓ ' + i + '</div>');
+            document.getElementById('itemsSection').innerHTML = items;
+
+            let stalls = '';
+            if (m.stalls.length > 0) {
+                stalls = '<div class="section-header">🔥 Live Counters</div>';
+                m.stalls.forEach(s => stalls += '<div class="stall-row">' + s + '</div>');
+            }
+            document.getElementById('stallsSection').innerHTML = stalls;
+
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        function quickAdd(id, cat) {
+            openMenu(id, cat);
+        }
+
+        function addToCart() {
+            const m = menus[currentCategory].find(x => x.id === document.getElementById('modalId').textContent);
+            cart.push({id: m.id, category: currentCategory, tagline: m.tagline, price: m.price, items: m.items.length, type: 'preset'});
+            updateCartUI();
+            closeModal();
+        }
+
+        function updateCartUI() {
+            document.getElementById('cartCount').textContent = cart.length;
+            document.getElementById('floatingCart').classList.toggle('show', cart.length > 0);
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
+
+        function openCustomize() {
+            selectedItems = [];
+            customItems = [];
+            document.getElementById('customizeModal').classList.add('active');
+            renderItemsSelector();
+            switchTab('select');
+        }
+
+        function closeCustomize() {
+            document.getElementById('customizeModal').classList.remove('active');
+        }
+
+        function renderItemsSelector() {
+            const items = getAllItems();
+            document.getElementById('itemsSelector').innerHTML = items.map(i => `
+                <label class="item-checkbox">
+                    <input type="checkbox" value="${i}" onchange="updateSummary()">
+                    <label>✓ ${i}</label>
+                </label>
+            `).join('');
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tab + 'Tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function addCustomItem() {
+            const val = document.getElementById('customInput').value.trim();
+            if (val && !customItems.includes(val)) {
+                customItems.push(val);
+                renderCustomItems();
+                document.getElementById('customInput').value = '';
+                updateSummary();
+            }
+        }
+
+        function renderCustomItems() {
+            document.getElementById('customList').innerHTML = customItems.map((i, idx) => `
+                <div class="custom-tag">${i} <button onclick="customItems.splice(${idx},1);renderCustomItems();updateSummary()">✕</button></div>
+            `).join('') || '<p style="color: #999; font-size: 12px;">No custom items yet</p>';
+        }
+
+        function updateSummary() {
+            selectedItems = Array.from(document.querySelectorAll('#itemsSelector input:checked')).map(e => e.value);
+            const total = selectedItems.length + customItems.length;
+            const counters = Array.from(document.querySelectorAll('#detailsTab input[type="checkbox"]:checked')).length;
+            const price = document.getElementById('customPrice').value || 0;
+            document.getElementById('summaryItems').textContent = total;
+            document.getElementById('summaryCounters').textContent = counters;
+            document.getElementById('summaryPrice').textContent = price;
+        }
+
+        function addCustomMenu() {
+            const name = document.getElementById('customName').value.trim() || 'My Custom Menu';
+            const price = parseInt(document.getElementById('customPrice').value);
+            const total = selectedItems.length + customItems.length;
+
+            if (!price || price < 50 || total === 0) {
+                alert('⚠️ Enter price (₹50+) and select items');
+                return;
+            }
+
+            cart.push({
+                id: 'CUSTOM-' + Date.now(),
+                category: 'custom',
+                tagline: name,
+                price: price,
+                items: total,
+                type: 'custom'
+            });
+
+            updateCartUI();
+            closeCustomize();
+        }
+
+        function showCart() {
+            if (!cart.length) {
+                alert('No menus selected!');
+                return;
+            }
+            updateSummaryDisplay();
+            document.getElementById('detailsModal').classList.add('active');
+        }
+
+        function updateSummaryDisplay() {
+            let html = '';
+            let total = 0;
+            cart.forEach((c, i) => {
+                html += `<div class="summary-item"><span>${i+1}. ${c.tagline}</span><span>₹${c.price}</span></div>`;
+                total += c.price;
+            });
+            document.getElementById('cartSummary').innerHTML = html;
+            document.getElementById('totalPerGuest').textContent = total;
+        }
+
+        function closeDetails() {
+            document.getElementById('detailsModal').classList.remove('active');
+        }
+
+        function submitOrder() {
+            const name = document.getElementById('clientName').value.trim();
+            const phone = document.getElementById('clientPhone').value.trim();
+            const email = document.getElementById('clientEmail').value.trim();
+            const event = document.getElementById('eventType').value;
+            const date = document.getElementById('eventDate').value;
+            const guests = document.getElementById('guestCount').value;
+            const venue = document.getElementById('venue').value.trim();
+            const notes = document.getElementById('notes').value.trim();
+
+            if (!name || !phone || !event || !date || !guests) {
+                alert('⚠️ Fill all required fields');
+                return;
+            }
+
+            let msg = `*CATERING INQUIRY*\n\n👤 *Client*\nName: ${name}\nPhone: ${phone}\n`;
+            if (email) msg += `Email: ${email}\n`;
+            msg += `\n🎉 *Event*\nType: ${event}\nDate: ${new Date(date).toLocaleDateString()}\nGuests: ${guests}\n`;
+            if (venue) msg += `Venue: ${venue}\n`;
+            msg += `\n📋 *Menus*\n`;
+            let total = 0;
+            cart.forEach((c, i) => {
+                msg += `${i+1}. ${c.tagline}: ₹${c.price}\n`;
+                total += c.price;
+            });
+            msg += `\n📊 *Total*\nPer Guest: ₹${total}\nFor ${guests} guests: ₹${total * guests}\n`;
+            if (notes) msg += `\n📝 Notes: ${notes}\n`;
+            msg += `\n✅ Please confirm availability`;
+
+            window.open(`https://wa.me/919696962666?text=${encodeURIComponent(msg)}`, '_blank');
+            closeDetails();
+            cart = [];
+            updateCartUI();
+        }
+
+        initTabs();
+        renderMenus();
+    </script>
+</body>
+</html>

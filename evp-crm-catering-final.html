@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#8B4513">
+<title>EVP CRM - Admin Dashboard</title>
+
+<style>
+:root {
+  --c1: #8B4513;
+  --c2: #D4AF37;
+  --c3: #2D1A0E;
+  --bg: #F5F5F0;
+  --card: #FFFFFF;
+  --text: #2C2C2C;
+  --subtext: #666666;
+  --border: #E0D5C8;
+  --success: #4CAF50;
+  --warning: #FF9800;
+  --danger: #F44336;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: 13px; padding-bottom: 70px; }
+
+.header {
+  background: var(--c1);
+  border-bottom: 3px solid var(--c2);
+  padding: 16px 14px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.logo { font-size: 18px; font-weight: 800; color: var(--c2); letter-spacing: 1px; }
+.user-badge { background: var(--c2); color: var(--c3); padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; }
+
+.nav-tabs {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.nav-tabs::-webkit-scrollbar { display: none; }
+
+.nav-tab {
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.7);
+  border: none;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.nav-tab.active { background: var(--c2); color: var(--c3); }
+.nav-tab:hover { background: rgba(212,175,55,0.3); }
+
+.container { max-width: 820px; margin: 0 auto; padding: 14px; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.section-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--c1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--c2);
+}
+
+.lead-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+
+.lead-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px; }
+.lead-name { font-size: 12px; font-weight: 800; color: var(--c1); }
+.lead-status { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 9px; font-weight: 700; text-transform: uppercase; }
+
+.status-new { background: #E3F2FD; color: #1976D2; }
+.status-contacted { background: #FFF3E0; color: #F57C00; }
+.status-confirmed { background: #E8F5E9; color: #388E3C; }
+
+.lead-details { font-size: 11px; color: var(--subtext); line-height: 1.6; margin-bottom: 8px; }
+.lead-detail-row { margin-bottom: 4px; }
+.lead-detail-label { font-weight: 700; color: var(--c1); }
+
+.lead-menus { background: #F9F9F7; border-left: 3px solid var(--c2); padding: 8px; margin: 8px 0; border-radius: 4px; font-size: 10px; }
+
+.lead-actions { display: flex; gap: 6px; }
+
+.action-btn {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid var(--border);
+  background: white;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.action-btn:hover { background: var(--bg); border-color: var(--c1); }
+.action-btn.whatsapp { background: #25D366; color: white; border-color: #25D366; }
+.action-btn.whatsapp:hover { background: #20BA5A; }
+
+.whatsapp-share-section {
+  background: #E8F5E9;
+  border: 2px solid #4CAF50;
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 16px;
+}
+
+.ws-title { font-size: 12px; font-weight: 800; color: #2E7D32; margin-bottom: 10px; }
+
+.ws-form { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.ws-input { flex: 1; min-width: 180px; padding: 10px; border: 1px solid #81C784; border-radius: 4px; font-size: 12px; font-family: inherit; }
+
+.ws-btn { padding: 10px 14px; background: #4CAF50; color: white; border: none; border-radius: 4px; font-weight: 700; font-size: 12px; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+
+.ws-btn:hover { background: #388E3C; }
+
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+
+.stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 12px; text-align: center; }
+
+.stat-number { font-size: 20px; font-weight: 800; color: var(--c1); }
+.stat-label { font-size: 9px; color: var(--subtext); text-transform: uppercase; margin-top: 4px; }
+
+.empty-state { text-align: center; padding: 40px 20px; color: var(--subtext); font-size: 12px; }
+.empty-icon { font-size: 32px; margin-bottom: 8px; }
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 0;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+  max-width: 820px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.nav-btn { flex: 1; padding: 8px; background: none; border: none; font-size: 20px; cursor: pointer; color: var(--subtext); transition: all 0.2s; }
+.nav-btn.active { color: var(--c1); }
+
+.loading { text-align: center; padding: 20px; color: var(--subtext); font-size: 12px; }
+.spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid var(--border); border-top-color: var(--c1); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.error-message { background: #FFEBEE; border: 1px solid #EF5350; color: #C62828; padding: 10px; border-radius: 6px; margin-bottom: 12px; font-size: 11px; }
+</style>
+
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="logo">EVP CRM</div>
+    <div class="user-badge">ADMIN</div>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab('home')">🏠 Home</button>
+    <button class="nav-tab" onclick="switchTab('leads')">📞 Leads</button>
+    <button class="nav-tab" onclick="switchTab('catering')">🍽️ Catering</button>
+    <button class="nav-tab" onclick="switchTab('accounts')">💰 Accounts</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- HOME TAB -->
+  <div id="home" class="tab-content active">
+    <div class="card">
+      <div class="section-title">📊 Dashboard Overview</div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number" id="totalBookings">0</div>
+          <div class="stat-label">Bookings</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="totalCatering">0</div>
+          <div class="stat-label">Catering Orders</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEADS TAB -->
+  <div id="leads" class="tab-content">
+    <div class="card">
+      <div class="section-title">📞 Wedding Leads</div>
+      <div id="leadsContent" class="empty-state">
+        <div class="empty-icon">📋</div>
+        <div>No wedding leads yet</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CATERING TAB -->
+  <div id="catering" class="tab-content">
+    
+    <div class="whatsapp-share-section">
+      <div class="ws-title">📱 Send Catering Portal Link</div>
+      <div class="ws-form">
+        <input 
+          type="tel" 
+          id="sharePhone" 
+          class="ws-input" 
+          placeholder="Enter 10-digit phone number"
+          maxlength="10"
+        >
+        <button class="ws-btn" onclick="sendCateringLink()">💬 Send Link</button>
+      </div>
+      <div style="font-size: 9px; color: #2E7D32; margin-top: 8px;">
+        ✓ Sends: https://evppalace.github.io/evp-crm/kalyana-sapadu.html
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number" id="cateringTotal">0</div>
+        <div class="stat-label">Total Orders</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="cateringRevenue">₹0</div>
+        <div class="stat-label">Revenue</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">🍽️ Catering Leads</div>
+      <div id="cateringLeadsContent">
+        <div class="loading">
+          <div class="spinner"></div>
+          <div style="margin-top: 8px;">Loading catering leads...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACCOUNTS TAB -->
+  <div id="accounts" class="tab-content">
+    <div class="card">
+      <div class="section-title">💰 Payments</div>
+      <div id="accountsContent" class="empty-state">
+        <div class="empty-icon">💳</div>
+        <div>Payment tracking coming soon</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="bottom-nav">
+  <button class="nav-btn active" onclick="switchTab('home'); updateNavButtons(this)">🏠</button>
+  <button class="nav-btn" onclick="switchTab('leads'); updateNavButtons(this)">📞</button>
+  <button class="nav-btn" onclick="switchTab('catering'); updateNavButtons(this)">🍽️</button>
+  <button class="nav-btn" onclick="switchTab('accounts'); updateNavButtons(this)">💰</button>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+<script>
+
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyC2c1V3cYDX5Njc78BGvbr43caM089IuiE",
+  authDomain: "evp-crm.firebaseapp.com",
+  databaseURL: "https://evp-crm-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "evp-crm",
+  storageBucket: "evp-crm.firebasestorage.app",
+  messagingSenderId: "78324247402",
+  appId: "1:78324247402:web:f4060a2bf5b04baf411313"
+};
+
+const CATERING_PORTAL_URL = 'https://evppalace.github.io/evp-crm/kalyana-sapadu.html';
+const WHATSAPP_BASE = 'https://wa.me/91';
+
+let db = null;
+let cateringLeads = [];
+let dbReady = false;
+
+// Initialize Firebase properly
+function initializeFirebase() {
+  try {
+    if (typeof firebase === 'undefined' || !firebase) {
+      console.log('Firebase library not loaded yet, retrying...');
+      setTimeout(initializeFirebase, 500);
+      return;
+    }
+    
+    if (firebase.apps && firebase.apps.length > 0) {
+      db = firebase.database();
+      dbReady = true;
+      console.log('Firebase initialized');
+      loadCateringLeads();
+    } else {
+      firebase.initializeApp(FIREBASE_CONFIG);
+      db = firebase.database();
+      dbReady = true;
+      console.log('Firebase initialized');
+      loadCateringLeads();
+    }
+  } catch (error) {
+    console.error('Firebase init error:', error);
+    setTimeout(initializeFirebase, 1000);
+  }
+}
+
+// Switch tabs
+function switchTab(tabName) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.getElementById(tabName).classList.add('active');
+}
+
+function updateNavButtons(btn) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// Load catering leads
+function loadCateringLeads() {
+  if (!dbReady || !db) {
+    console.log('Database not ready yet');
+    setTimeout(loadCateringLeads, 500);
+    return;
+  }
+
+  db.ref('catering_leads').on('value', function(snapshot) {
+    cateringLeads = [];
+    let totalRevenue = 0;
+    
+    if (snapshot.exists()) {
+      snapshot.forEach(function(childSnapshot) {
+        const lead = childSnapshot.val();
+        lead.id = childSnapshot.key;
+        cateringLeads.push(lead);
+        totalRevenue += (lead.totalCost || 0);
+      });
+    }
+    
+    document.getElementById('cateringTotal').textContent = cateringLeads.length;
+    document.getElementById('cateringRevenue').textContent = '₹' + totalRevenue.toLocaleString('en-IN');
+    document.getElementById('totalCatering').textContent = cateringLeads.length;
+    
+    renderCateringLeads();
+  }, function(error) {
+    console.error('Firebase error:', error);
+    document.getElementById('cateringLeadsContent').innerHTML = `
+      <div class="error-message">
+        ⚠️ Error loading leads: ${error.message}
+      </div>
+    `;
+  });
+}
+
+// Render catering leads
+function renderCateringLeads() {
+  const container = document.getElementById('cateringLeadsContent');
+  
+  if (cateringLeads.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🍽️</div>
+        <div>No catering orders yet</div>
+      </div>
+    `;
+    return;
+  }
+  
+  container.innerHTML = cateringLeads.map(lead => `
+    <div class="lead-card">
+      <div class="lead-header">
+        <div>
+          <div class="lead-name">${lead.name || 'N/A'}</div>
+          <div style="font-size: 10px; color: var(--subtext);">📱 ${lead.phone}</div>
+        </div>
+        <div class="lead-status status-${lead.status || 'new'}">${(lead.status || 'new').toUpperCase()}</div>
+      </div>
+      
+      <div class="lead-details">
+        <div class="lead-detail-row">
+          <span class="lead-detail-label">Event:</span> ${lead.eventType || 'N/A'} on ${lead.eventDate || 'N/A'}
+        </div>
+        <div class="lead-detail-row">
+          <span class="lead-detail-label">Guests:</span> ${lead.guestCount || 0} people
+        </div>
+        <div class="lead-detail-row">
+          <span class="lead-detail-label">Venue:</span> ${lead.venue || 'N/A'}
+        </div>
+        <div class="lead-detail-row">
+          <span class="lead-detail-label">Cost:</span> ₹${(lead.totalCost || 0).toLocaleString('en-IN')} (₹${Math.round(lead.totalPerGuest || 0)}/guest)
+        </div>
+      </div>
+      
+      ${lead.menus && lead.menus.length > 0 ? `
+        <div class="lead-menus">
+          <strong>Selected Menus:</strong><br>
+          ${lead.menus.map(m => `🍽️ ${m.id} - ${m.tagline} (₹${m.price}/person)`).join('<br>')}
+        </div>
+      ` : ''}
+      
+      <div class="lead-actions">
+        <button class="action-btn whatsapp" onclick="openWhatsApp('${lead.phone}')">💬 WhatsApp</button>
+        <button class="action-btn" onclick="callCustomer('${lead.phone}')">📞 Call</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Send catering link
+function sendCateringLink() {
+  const phone = document.getElementById('sharePhone').value.trim();
+  
+  if (!phone || phone.length !== 10 || !/^\d+$/.test(phone)) {
+    alert('Please enter valid 10-digit number');
+    return;
+  }
+  
+  const message = `Hi! 🍽️ Check out our catering menu:\n\n${CATERING_PORTAL_URL}\n\n100% Vegetarian • Various Tiers`;
+  const waLink = `${WHATSAPP_BASE}${phone}?text=${encodeURIComponent(message)}`;
+  
+  window.open(waLink, '_blank');
+  document.getElementById('sharePhone').value = '';
+}
+
+// WhatsApp for lead
+function openWhatsApp(phone) {
+  const message = 'Hi! Confirming your catering order details...';
+  const waLink = `${WHATSAPP_BASE}${phone}?text=${encodeURIComponent(message)}`;
+  window.open(waLink, '_blank');
+}
+
+// Call customer
+function callCustomer(phone) {
+  window.location.href = `tel:+91${phone}`;
+}
+
+// Start initialization when page loads
+window.addEventListener('load', initializeFirebase);
+
+// Also try to init on DOM ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeFirebase);
+} else {
+  initializeFirebase();
+}
+
+</script>
+
+</body>
+</html>
